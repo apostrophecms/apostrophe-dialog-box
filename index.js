@@ -49,9 +49,6 @@ module.exports = {
     fields: ['title', 'example']
   }],
 
-
-  
-
   // afterConstruct: function(self) {},
   // beforeConstruct: function(self, options) {},
   afterConstruct: function(self) {
