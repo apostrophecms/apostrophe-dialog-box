@@ -1,0 +1,11 @@
+{% extends 'apostrophe-templates:layout.html' %}
+
+{% block title %}{{ super() }} - {{ data.page.title }}{% endblock %}
+
+{% block main %}
+  <ul style="padding: 8rem;">
+    {% for item in data.pieces %}
+      <li><a href="{{ item._url }}">{{ item.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
