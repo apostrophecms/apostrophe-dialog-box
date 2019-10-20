@@ -1,5 +1,7 @@
 # apostrophe-dialog-box
 
+## 🚨🚨 WIP, not at a working stage yet!
+
 ## Purpose of starting point
 The hope for this boilerplate is to provide you with a framework for breaking up the module and also to pre-wire much of the non-typical meta Apostrophe programming so that you can focus on front-end implmenetation, triggering, etc.
 
