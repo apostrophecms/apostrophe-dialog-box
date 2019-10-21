@@ -10,6 +10,11 @@ All modules prefixed with `apostrophe-dialog-box-apos-` are `improve` modules, m
 ### apostrophe-dialog-box
 The base piece type for managing dialogs. This is the top level module in this bundle. It will provide any configuration needed for dialogs themselves.
 
+Also comes with an example route that returns a JSON array of all dialog box pieces.. this in itself could be useful but just also fleshes out more bits of Apostrophe you might want.
+
+- [More info on how Apostrophe implements Express routes here](https://docs.apostrophecms.org/apostrophe/technical-overviews/how-apostrophe-handles-requests#express-routes)
+- [More on fetching pieces from Apostrophe (docs use callback style but can use async/await, as illustrated in this repo)](https://docs.apostrophecms.org/apostrophe/tutorials/intermediate/model-layer#fetching-pieces-with-apostrophe)
+
 ### apostrophe-dialog-box-pages
 Provides the show pages for dialogs for natural editing and composing. Also provides an index for admin viewing all dialogs (the path for editors to get to these dialog UIs might change and an index might not be the right choice).
 
