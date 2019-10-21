@@ -19,7 +19,6 @@ module.exports = {
       'apostrophe-dialog-box-apos-images',
       'apostrophe-dialog-box-apos-users',
       'apostrophe-dialog-box-apos-rich-text-widgets',
-
     ]
   },
 
@@ -29,11 +28,6 @@ module.exports = {
   pluralLabel: 'Dialog Boxes',
   dialogBox: false,
   addFields: [
-    {
-      name: 'example',
-      label: 'Example String',
-      type: 'string'
-    },
     {
       name: 'template',
       label: 'Template',
@@ -49,10 +43,13 @@ module.exports = {
     fields: ['title', 'example']
   }],
 
-  // afterConstruct: function(self) {},
-  // beforeConstruct: function(self, options) {},
+  construct: function (self, options) {
+    require('./lib/routes')(self, options);
+    require('./lib/api')(self, options);
+  },
+
   afterConstruct: function(self) {
-    self.pushAsset('script', 'always', { when: 'always' });
+    self.addRoutes();
     self.pushAsset('script', 'always', { when: 'lean' });
   }
 }
