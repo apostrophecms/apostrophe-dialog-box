@@ -40,7 +40,7 @@ module.exports = {
   arrangeFields: [{
     name: 'basics',
     label: 'Basics',
-    fields: ['title', 'example']
+    fields: ['title', 'slug', 'tags', 'published', 'template']
   }],
 
   construct: function (self, options) {
