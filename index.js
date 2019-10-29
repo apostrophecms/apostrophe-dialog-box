@@ -34,7 +34,7 @@ module.exports = {
     options.addFields = options.addFields.concat([
       {
         name: 'time',
-        label: 'Default trigger time',
+        label: 'Trigger time (seconds)',
         type: 'integer'
       }
     ]);
@@ -47,7 +47,7 @@ module.exports = {
       },
       {
         name: 'info',
-        label: 'info',
+        label: 'Info',
         fields: ['time', 'template']
       }
     ]);
