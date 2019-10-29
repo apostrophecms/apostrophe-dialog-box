@@ -58,5 +58,6 @@ module.exports = {
   afterConstruct: function(self) {
     self.addRoutes();
     self.pushAsset('script', 'always', { when: 'lean' });
+    self.pushAsset('stylesheet', 'dialog');
   }
 };

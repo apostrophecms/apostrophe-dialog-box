@@ -4,17 +4,10 @@
 
 {% block main %}
   <div class="apos-dialog-boxes">
-    {% for item in data.pieces %}
+    {% for item in data.pieces%}
       {% if item.type === 'apostrophe-dialog-box' %}
         {% set template = item.template or 'default' %}
-          <div 
-            class="appos-dialog-box"
-            id="{{ item.slug }}" 
-            data-active="{{1 if data.page.dialogIds.includes(item._id) else 0}}"
-            data-time="{{item.time}}"
-          >
-            {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
-          </div>
+          {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
       {% endif %}
     {% endfor %}
   </div>
