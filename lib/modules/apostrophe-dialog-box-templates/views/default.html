@@ -2,16 +2,16 @@
 {% set dialogPiece = data.piece or item %}
 {% if dialogPiece %} 
 {% block main %}
-  <div class="apos-dialog-box">
-    <h3>{{dialogPiece.title}}</h3>
-    {{
-      apos.area(dialogPiece, 'body', {
-        widgets: {
-          'apostrophe-images': {},
-          'apostrophe-rich-text': {}
-        }
-      })
-    }}
-  </div>
+<div class="apos-dialog-box">
+  <h3>{{dialogPiece.title}}</h3>
+  {{
+    apos.area(dialogPiece, 'body', {
+      widgets: {
+        'apostrophe-images': {},
+        'apostrophe-rich-text': {}
+      }
+    })
+  }}
+</div>
 {% endblock %}
 {% endif %}

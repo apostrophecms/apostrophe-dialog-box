@@ -16,14 +16,25 @@
   }
 
   &-blackout {
+    display: none;
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 200;
     overflow: auto;
     outline: 0;
     background: #3e71e2;
+    animation: fadein 1s linear forwards;
+    opacity: 0;
+
+    &--active {
+      display: block;
+    }
   }
+}
+
+@keyframes fadein {
+  100% {opacity: 1;}
 }
