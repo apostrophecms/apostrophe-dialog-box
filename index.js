@@ -5,12 +5,10 @@ module.exports = {
       // dialog functionality
       'apostrophe-dialog-box-pages',
       'apostrophe-dialog-box-templates',
-
       // improvements
       'apostrophe-dialog-box-apos-pages',
       'apostrophe-dialog-box-apos-widgets',
       'apostrophe-dialog-box-apos-doc-type-manager',
-
       // modules that should opt-out
       'apostrophe-dialog-box-apos-files',
       'apostrophe-dialog-box-apos-groups',
@@ -30,26 +28,30 @@ module.exports = {
       label: 'Template',
       type: 'select',
       choices: [{ label: 'Default', value: 'default' }]
-    },
-    {
-      name: 'triggerTime',
-      label: 'Default trigger time',
-      type: 'integer'
-    }
-  ],
-  arrangeFields: [
-    {
-      name: 'basics',
-      label: 'Basics',
-      fields: ['title', 'slug', 'tags', 'published', 'template']
-    },
-    {
-      name: 'additional',
-      label: 'Additional',
-      fields: ['triggerTime']
     }
   ],
   construct: function(self, options) {
+    options.addFields = options.addFields.concat([
+      {
+        name: 'time',
+        label: 'Trigger time (seconds)',
+        type: 'integer'
+      }
+    ]);
+
+    options.arrangeFields = options.arrangeFields.concat([
+      {
+        name: 'basics',
+        label: 'Basics',
+        fields: ['title', 'slug', 'tags', 'published']
+      },
+      {
+        name: 'info',
+        label: 'Info',
+        fields: ['time', 'template']
+      }
+    ]);
+
     require('./lib/routes')(self, options);
     require('./lib/api')(self, options);
   },

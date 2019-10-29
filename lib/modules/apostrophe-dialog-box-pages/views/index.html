@@ -3,9 +3,19 @@
 {% block title %}{{ super() }} - {{ data.page.title }}{% endblock %}
 
 {% block main %}
-  <ul style="padding: 8rem;">
+  <div class="apos-dialog-boxes">
     {% for item in data.pieces %}
-      <li><a href="{{ item._url }}">{{ item.title }}</a></li>
+      {% if item.type === 'apostrophe-dialog-box' %}
+        {% set template = item.template or 'default' %}
+          <div 
+            class="appos-dialog-box"
+            id="{{ item.slug }}" 
+            data-active="{{1 if data.page.dialogIds.includes(item._id) else 0}}"
+            data-time="{{item.time}}"
+          >
+            {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
+          </div>
+      {% endif %}
     {% endfor %}
-  </ul>
+  </div>
 {% endblock %}
