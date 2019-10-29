@@ -1,12 +1,17 @@
+{% extends "base.html" %}
 {% set dialogPiece = data.piece or item %}
 {% if dialogPiece %} 
-  <h3>Default template</h3>
-  {{ 
-    apos.area(dialogPiece, 'body', { 
-      widgets: {
-        'apostrophe-images': {},
-        'apostrophe-rich-text': {}
-      }
-    })
-  }}
+{% block main %}
+  <div class="apos-dialog-box">
+    <h3>{{dialogPiece.title}}</h3>
+    {{
+      apos.area(dialogPiece, 'body', {
+        widgets: {
+          'apostrophe-images': {},
+          'apostrophe-rich-text': {}
+        }
+      })
+    }}
+  </div>
+{% endblock %}
 {% endif %}
