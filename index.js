@@ -9,6 +9,8 @@ module.exports = {
       'apostrophe-dialog-box-apos-pages',
       'apostrophe-dialog-box-apos-widgets',
       'apostrophe-dialog-box-apos-doc-type-manager',
+      'apostrophe-dialog-box-layout-modifier',
+      
       // modules that should opt-out
       'apostrophe-dialog-box-apos-files',
       'apostrophe-dialog-box-apos-groups',
