@@ -9,3 +9,10 @@
     {% endfor %}
   </ul>
 {% endblock %}
+
+{% block dialogBoxes %}
+  {% for item in data.pieces %}
+    {% set template = item.template or 'default' %}
+    {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
+  {% endfor %}
+{% endblock %}
