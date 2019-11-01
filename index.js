@@ -10,7 +10,7 @@ module.exports = {
       'apostrophe-dialog-box-apos-widgets',
       'apostrophe-dialog-box-apos-doc-type-manager',
       'apostrophe-dialog-box-layout-modifier',
-      
+
       // modules that should opt-out
       'apostrophe-dialog-box-apos-files',
       'apostrophe-dialog-box-apos-groups',
@@ -22,6 +22,7 @@ module.exports = {
   name: 'apostrophe-dialog-box',
   extend: 'apostrophe-pieces',
   label: 'Dialog Box',
+  alias: 'dialog',
   pluralLabel: 'Dialog Boxes',
   dialogBox: false,
   addFields: [
@@ -57,9 +58,19 @@ module.exports = {
     require('./lib/routes')(self, options);
     require('./lib/api')(self, options);
   },
-  afterConstruct: function(self) {
+  afterConstruct: async function(self) {
     self.addRoutes();
     self.pushAsset('script', 'always', { when: 'lean' });
     self.pushAsset('stylesheet', 'dialog');
+
+    self.on('apostrophe-pages:beforeSend', 'addWeather', async function() {
+      const dialogs = await self.apos.modules['apostrophe-dialog-box']
+        .find({}, {})
+        .toArray();
+
+      self.addHelpers({
+        dialogs: dialogs
+      });
+    });
   }
 };

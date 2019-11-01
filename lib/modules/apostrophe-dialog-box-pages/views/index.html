@@ -3,12 +3,9 @@
 {% block title %}{{ super() }} - {{ data.page.title }}{% endblock %}
 
 {% block main %}
-  <div class="apos-dialog-boxes">
-    {% for item in data.pieces%}
-      {% if item.type === 'apostrophe-dialog-box' %}
-        {% set template = item.template or 'default' %}
-          {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
-      {% endif %}
+  <ul style="padding: 8rem;">
+    {% for item in data.pieces %}
+      <li><a data-open="{{item.slug}}" href="javascript:void(0);" class="apostrophe-dialog-box-trigger">{{ item.title }}</a></li>
     {% endfor %}
-  </div>
+  </ul>
 {% endblock %}

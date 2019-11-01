@@ -1,10 +1,7 @@
 {% extends "outerLayoutBase.html" %}
 
 {% block extraBody %}
-  {% set dialogs = apos.templates.dialogs %}
-    <script>
-      console.log({{dialogs | json}});
-    </script>
+  {% set dialogs = apos.dialog.dialogs %}
   {% for item in dialogs %}
     {% set template = item.template or 'default' %}
     {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
