@@ -7,6 +7,10 @@
 function initDialogs() {
   var _dialogs = document.getElementsByClassName('apos-dialog-box-blackout');
 
+  var _buttons = document.getElementsByClassName(
+    'apostrophe-dialog-box-trigger'
+  );
+
   function closeDialog(dialog) {
     dialog.classList.remove('apos-dialog-box-blackout--active');
   }
@@ -23,15 +27,15 @@ function initDialogs() {
     var triggerTimeSec = dialog.getAttribute('data-time');
     var isActive = dialog.getAttribute('data-active') === '1';
 
-    if (triggerTimeSec && isActive) {
+    if (triggerTimeSec && isActive && !apos.user) {
       var triggerTimeMil = triggerTimeSec * 1000;
-      var triggerTimeout = setTimeout(function(){
+      var triggerTimeout = setTimeout(function() {
         closeAllDialogs(_dialogs);
         openDialog(dialog);
         clearTimeout(triggerTimeout);
-      }, triggerTimeMil)
+      }, triggerTimeMil);
     }
-  
+
     dialog.addEventListener('click', function(event) {
       if (event.target.classList.contains('apos-dialog-box-blackout--active')) {
         closeDialog(dialog);
@@ -48,9 +52,11 @@ function initDialogs() {
             We take the first open dialog we have because there should
             not be more than 1 active dialog at any given time.
           */
-          var activeDialog = document.getElementsByClassName('apos-dialog-box-blackout--active')[0];
+          var activeDialog = document.getElementsByClassName(
+            'apos-dialog-box-blackout--active'
+          )[0];
 
-          if(activeDialog) {
+          if (activeDialog) {
             closeDialog(activeDialog);
           }
         }
@@ -58,12 +64,36 @@ function initDialogs() {
     }
   }
 
+  function _processButtons() {
+    Array.prototype.forEach.call(_buttons, function(button) {
+      button.addEventListener('click', function () {
+        var triggerId = button.getAttribute('data-open');
+
+        if (!triggerId) {
+          return;
+        }
+
+        var dialog = document.getElementById(triggerId);
+
+        if (!dialog) {
+          return;
+        }
+
+        closeAllDialogs(dialog);
+        openDialog(dialog);
+      });
+    });
+  }
+
   return {
     dialogs: _dialogs,
-    processDialogs: _processDialogs
-  }
+    processDialogs: _processDialogs,
+    processButtons: _processButtons
+  };
 }
 
-const dialogs = initDialogs();
-
-dialogs.processDialogs();
+window.addEventListener('load', function() {
+  const dialogs = initDialogs();
+  dialogs.processDialogs();
+  dialogs.processButtons();
+});
