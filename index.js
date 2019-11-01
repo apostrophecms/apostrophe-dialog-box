@@ -63,10 +63,8 @@ module.exports = {
     self.pushAsset('script', 'always', { when: 'lean' });
     self.pushAsset('stylesheet', 'dialog');
 
-    self.on('apostrophe-pages:beforeSend', 'addWeather', async function() {
-      const dialogs = await self.apos.modules['apostrophe-dialog-box']
-        .find({}, {})
-        .toArray();
+    self.on('apostrophe-pages:beforeSend', 'addDialogs', async function() {
+      const dialogs = await self.getAll({});
 
       self.addHelpers({
         dialogs: dialogs
