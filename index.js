@@ -57,17 +57,9 @@ module.exports = {
     self.on('apostrophe-pages:beforeSend', 'addDialogs', async function(req) {
       const page = req.data.page;
 
-      let dialogs = page.dialogs;
-
-      if (page.type === 'apostrophe-dialog-box-page') {
-        dialogs = await self.getAll({}).map((dialog) => {
-          dialogId: dialog._id;
-        });
-      }
-
       self.apos.templates.prepend('body', (req) => {
         return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
-          dialogs: dialogs
+          dialogs: page.dialogs ? page.dialogs : []
         });
       });
     });
