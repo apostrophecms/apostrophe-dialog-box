@@ -9,7 +9,6 @@ module.exports = {
       'apostrophe-dialog-box-apos-pages',
       'apostrophe-dialog-box-apos-widgets',
       'apostrophe-dialog-box-apos-doc-type-manager',
-      'apostrophe-dialog-box-layout-modifier',
 
       // modules that should opt-out
       'apostrophe-dialog-box-apos-files',
@@ -34,14 +33,6 @@ module.exports = {
     }
   ],
   construct: function(self, options) {
-    options.addFields = options.addFields.concat([
-      {
-        name: 'time',
-        label: 'Trigger time (seconds)',
-        type: 'integer'
-      }
-    ]);
-
     options.arrangeFields = options.arrangeFields.concat([
       {
         name: 'basics',
@@ -51,7 +42,7 @@ module.exports = {
       {
         name: 'info',
         label: 'Info',
-        fields: ['time', 'template']
+        fields: ['template']
       }
     ]);
 
@@ -63,11 +54,21 @@ module.exports = {
     self.pushAsset('script', 'always', { when: 'lean' });
     self.pushAsset('stylesheet', 'dialog');
 
-    self.on('apostrophe-pages:beforeSend', 'addDialogs', async function() {
-      const dialogs = await self.getAll({});
+    self.on('apostrophe-pages:beforeSend', 'addDialogs', async function(req) {
+      const page = req.data.page;
 
-      self.addHelpers({
-        dialogs: dialogs
+      let dialogs = page.dialogs;
+
+      if (page.type === 'apostrophe-dialog-box-page') {
+        dialogs = await self.getAll({}).map((dialog) => {
+          dialogId: dialog._id;
+        });
+      }
+
+      self.apos.templates.prepend('body', (req) => {
+        return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
+          dialogs: dialogs
+        });
       });
     });
   }
