@@ -66,7 +66,7 @@ function initDialogs() {
 
   function _processButtons() {
     Array.prototype.forEach.call(_buttons, function(button) {
-      button.addEventListener('click', function () {
+      button.addEventListener('click', function() {
         var triggerId = button.getAttribute('data-open');
 
         if (!triggerId) {
@@ -92,8 +92,106 @@ function initDialogs() {
   };
 }
 
+function extend(Child, Parent) {
+  var Temp = function() {};
+
+  Temp.prototype = Parent.prototype;
+
+  Child.prototype = new Temp();
+
+  Child.prototype.constructor = Child;
+}
+
+
+
+function Trigger(dialog) {
+  this._type = '';
+
+  this.getType = function() {
+    return this._type;
+  };
+
+  this.canActivate = function() {
+    return false;
+  };
+
+  this.addListeners = function() {};
+}
+
+function TimeTrigger() {
+  this._type = '';
+
+  this.canActivate = function(dialog) {
+    return true;
+  };
+
+  this.addListeners = function(dialog) {};
+}
+
+extend(TimeTrigger, Trigger);
+
+function Dialog(element, options) {
+  this._element = element;
+
+  // this.time = parseInt(element.getAttribute('data-time'));
+
+  // this.session = element.getAttribute('data-session') === '1';
+
+  // this.id = element.getAttribute('data-id');
+
+  this.open = function() {
+    return this._element.classList.add('apos-dialog-box-blackout--active');
+  };
+
+  this.close = function() {
+    return this._element.classList.remove('apos-dialog-box-blackout--active');
+  };
+}
+
+function Renderer(element) {
+
+  this.render = function(dialogId, cb) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        element.innerHTML = this.responseText;
+        console.log(document.getElementById(dialogId));
+        var dialog = new Dialog(document.getElementById(dialogId));
+        dialog.open();
+      }
+    };
+    xhttp.open('GET', '/modules/apostrophe-dialog-box/render/' + dialogId, true);
+    xhttp.send();
+  };
+}
+
 window.addEventListener('load', function() {
-  const dialogs = initDialogs();
-  dialogs.processDialogs();
-  dialogs.processButtons();
+  var _render = new Renderer(
+    document.getElementById('apostrophe-dialog-box-render-area')
+  );
+
+  var _dialogsMarkup = document.getElementsByClassName(
+    'apostrophe-dialog-box-markup'
+  );
+
+  var _buttons = document.getElementsByClassName(
+    'apostrophe-dialog-box-trigger'
+  );
+
+  for (var i = 0; i < _buttons.length; i++) {
+    _buttons[i].addEventListener(
+      'click',
+      (function(button) {
+        return function() {
+          var dialogId = button.getAttribute('data-open');
+
+          if (!dialogId) {
+            return;
+          }
+
+          _render.render(dialogId, function(dialog) {});
+        };
+      })(_buttons[i])
+    );
+  }
 });

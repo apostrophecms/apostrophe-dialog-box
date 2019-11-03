@@ -54,13 +54,10 @@ module.exports = {
     self.pushAsset('script', 'always', { when: 'lean' });
     self.pushAsset('stylesheet', 'dialog');
 
-    self.on('apostrophe-pages:beforeSend', 'addDialogs', async function(req) {
+    self.apos.templates.prepend('body', (req) => {
       const page = req.data.page;
-
-      self.apos.templates.prepend('body', (req) => {
-        return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
-          dialogs: page.dialogs ? page.dialogs : []
-        });
+      return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
+        dialogs: page.dialogs ? page.dialogs : []
       });
     });
   }
