@@ -4,6 +4,22 @@
 
 //This is core logic for time triggers. It can be moved somewhere else in the future
 
+var dialogClasses = {
+  markups: 'apostrophe-dialog-box-markup',
+  buttons: 'apostrophe-dialog-box-trigger',
+  render: 'apostrophe-dialog-box-render-area',
+  active: 'apos-dialog-box-blackout--active',
+  overlay: 'apos-dialog-box-blackout'
+};
+
+var helpers = {
+  backdrop: function(event) {
+    if (event.target.classList.contains(dialogClasses.active)) {
+      event.target.classList.remove(dialogClasses.active);
+    }
+  }
+};
+
 function extend(Child, Parent) {
   var Temp = function() {};
 
@@ -35,6 +51,10 @@ function Dialog(id) {
     }
 
     _element = document.getElementById(id);
+    
+    if (_element) {
+      _element.addEventListener('click', helpers.backdrop);
+    }
 
     return _element;
   };
@@ -44,7 +64,7 @@ function Dialog(id) {
       return console.warn('Trying to trigger not rendered dialog!');
     }
 
-    return this.element().classList.add('apos-dialog-box-blackout--active');
+    return this.element().classList.add(dialogClasses.active);
   };
 
   this.close = function() {
@@ -52,7 +72,7 @@ function Dialog(id) {
       return console.warn('Trying to trigger not rendered dialog!');
     }
 
-    return this.element().classList.remove('apos-dialog-box-blackout--active');
+    return this.element().classList.remove(dialogClasses.active);
   };
 }
 
@@ -105,13 +125,6 @@ function TimeTrigger(render, dialogs) {
       dialogs.close();
       render.render(dialog.id, function() {
         dialog.open();
-        dialog.element().addEventListener('click', function(event) {
-          if (
-            event.target.classList.contains('apos-dialog-box-blackout--active')
-          ) {
-            dialog.close();
-          }
-        });
       });
       clearTimeout(triggerTimeout);
     }, triggerTime);
@@ -120,22 +133,22 @@ function TimeTrigger(render, dialogs) {
 
 extend(TimeTrigger, Trigger);
 
-function Dialogs(options) {
-  var _markups = document.getElementsByClassName(options.markups);
+function Dialogs() {
+  var _markups = document.getElementsByClassName(dialogClasses.markups);
 
-  var _buttons = document.getElementsByClassName(options.buttons);
+  var _buttons = document.getElementsByClassName(dialogClasses.buttons);
 
-  var _render = new Renderer(options.render);
+  var _render = new Renderer(dialogClasses.render);
 
   var _triggers = [new TimeTrigger(_render, this)];
 
   this.close = function() {
-    var dialogs = document.getElementsByClassName(options.overlay);
+    var dialogs = document.getElementsByClassName(dialogClasses.overlay);
     for (var i = 0; i < dialogs.length; i++) {
       var element = dialogs[i];
 
       if (element) {
-        element.classList.remove(options.active);
+        element.classList.remove(dialogClasses.active);
       }
     }
   };
@@ -156,7 +169,7 @@ function Dialogs(options) {
 
             // If dialog exists then we don't need to render
             if (exists) {
-              return (new Dialog(dialogId)).open();
+              return new Dialog(dialogId).open();
             }
 
             return _render.render(dialogId, function() {
@@ -184,13 +197,7 @@ function Dialogs(options) {
 }
 
 window.addEventListener('load', function() {
-  var dialogs = new Dialogs({
-    markups: 'apostrophe-dialog-box-markup',
-    buttons: 'apostrophe-dialog-box-trigger',
-    render: 'apostrophe-dialog-box-render-area',
-    active: 'apos-dialog-box-blackout--active',
-    overlay: 'apos-dialog-box-blackout'
-  });
+  var dialogs = new Dialogs();
 
   dialogs.initButtons();
 
