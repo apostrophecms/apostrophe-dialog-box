@@ -70,7 +70,7 @@ module.exports = {
           req,
           'apostrophe-dialog-box-templates:list_all.html',
           {
-            pieces: req.data.pieces,
+            pieces: req.data.pieces ? req.data.pieces : []
           }
         );
       }
