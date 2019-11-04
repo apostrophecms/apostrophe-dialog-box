@@ -4,96 +4,201 @@
 
 //This is core logic for time triggers. It can be moved somewhere else in the future
 
-function initDialogs() {
-  var _dialogs = document.getElementsByClassName('apos-dialog-box-blackout');
+function extend(Child, Parent) {
+  var Temp = function() {};
 
-  var _buttons = document.getElementsByClassName(
-    'apostrophe-dialog-box-trigger'
-  );
+  Temp.prototype = Parent.prototype;
 
-  function closeDialog(dialog) {
-    dialog.classList.remove('apos-dialog-box-blackout--active');
-  }
+  Child.prototype = new Temp();
 
-  function closeAllDialogs(dialogs) {
-    Array.prototype.forEach.call(dialogs, closeDialog);
-  }
+  Child.prototype.constructor = Child;
+}
 
-  function openDialog(dialog) {
-    dialog.classList.add('apos-dialog-box-blackout--active');
-  }
+function Dialog(id) {
+  var _element = null;
 
-  function processDialog(dialog) {
-    var triggerTimeSec = dialog.getAttribute('data-time');
-    var isActive = dialog.getAttribute('data-active') === '1';
+  this._markup = document.getElementById('markup:' + id);
 
-    if (triggerTimeSec && isActive && !apos.user) {
-      var triggerTimeMil = triggerTimeSec * 1000;
-      var triggerTimeout = setTimeout(function() {
-        closeAllDialogs(_dialogs);
-        openDialog(dialog);
-        clearTimeout(triggerTimeout);
-      }, triggerTimeMil);
+  this.time = this._markup
+    ? parseInt(this._markup.getAttribute('data-time'))
+    : null;
+
+  this.session = this._markup
+    ? this._markup.getAttribute('data-session') === '1'
+    : false;
+
+  this.id = id;
+
+  this.element = function() {
+    if (_element) {
+      return _element;
     }
 
-    dialog.addEventListener('click', function(event) {
-      if (event.target.classList.contains('apos-dialog-box-blackout--active')) {
-        closeDialog(dialog);
+    _element = document.getElementById(id);
+
+    return _element;
+  };
+
+  this.open = function() {
+    if (!this.element()) {
+      return console.warn('Trying to trigger not rendered dialog!');
+    }
+
+    return this.element().classList.add('apos-dialog-box-blackout--active');
+  };
+
+  this.close = function() {
+    if (!this.element()) {
+      return console.warn('Trying to trigger not rendered dialog!');
+    }
+
+    return this.element().classList.remove('apos-dialog-box-blackout--active');
+  };
+}
+
+function Renderer(id) {
+  var _element = document.getElementById(id);
+
+  this.render = function(dialogId, callback) {
+    var http = new XMLHttpRequest();
+
+    http.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        _element.innerHTML = this.responseText;
+
+        if (callback) {
+          callback();
+        }
       }
-    });
-  }
+    };
 
-  function _processDialogs() {
-    if (_dialogs.length) {
-      Array.prototype.forEach.call(_dialogs, processDialog);
-      document.addEventListener('keyup', function(event) {
-        if (event.keyCode === 27) {
-          /* 
-            We take the first open dialog we have because there should
-            not be more than 1 active dialog at any given time.
-          */
-          var activeDialog = document.getElementsByClassName(
-            'apos-dialog-box-blackout--active'
-          )[0];
+    http.open('GET', '/modules/apostrophe-dialog-box/render/' + dialogId, true);
 
-          if (activeDialog) {
-            closeDialog(activeDialog);
+    http.send();
+  };
+}
+
+function Trigger(render, dialogs) {
+  this._type = '';
+
+  this.getType = function() {
+    return this._type;
+  };
+
+  this.canActivate = function(dialog) {
+    return false;
+  };
+
+  this.addListeners = function(dialog) {};
+}
+
+function TimeTrigger(render, dialogs) {
+  this._type = 'time';
+
+  this.canActivate = function(dialog) {
+    return !!dialog.time;
+  };
+
+  this.addListeners = function(dialog) {
+    var triggerTime = dialog.time * 1000;
+    var triggerTimeout = setTimeout(function() {
+      dialogs.close();
+      render.render(dialog.id, function() {
+        dialog.open();
+        dialog.element().addEventListener('click', function(event) {
+          if (
+            event.target.classList.contains('apos-dialog-box-blackout--active')
+          ) {
+            dialog.close();
           }
-        }
+        });
       });
+      clearTimeout(triggerTimeout);
+    }, triggerTime);
+  };
+}
+
+extend(TimeTrigger, Trigger);
+
+function Dialogs(options) {
+  var _markups = document.getElementsByClassName(options.markups);
+
+  var _buttons = document.getElementsByClassName(options.buttons);
+
+  var _render = new Renderer(options.render);
+
+  var _triggers = [new TimeTrigger(_render, this)];
+
+  this.close = function() {
+    var dialogs = document.getElementsByClassName(options.overlay);
+    for (var i = 0; i < dialogs.length; i++) {
+      var element = dialogs[i];
+
+      if (element) {
+        element.classList.remove(options.active);
+      }
     }
-  }
+  };
 
-  function _processButtons() {
-    Array.prototype.forEach.call(_buttons, function(button) {
-      button.addEventListener('click', function () {
-        var triggerId = button.getAttribute('data-open');
+  this.initButtons = function() {
+    for (var i = 0; i < _buttons.length; i++) {
+      _buttons[i].addEventListener(
+        'click',
+        (function(button) {
+          return function() {
+            var dialogId = button.getAttribute('data-open');
 
-        if (!triggerId) {
-          return;
+            if (!dialogId) {
+              return;
+            }
+
+            var exists = document.getElementById(dialogId);
+
+            // If dialog exists then we don't need to render
+            if (exists) {
+              return (new Dialog(dialogId)).open();
+            }
+
+            return _render.render(dialogId, function() {
+              var dialog = new Dialog(dialogId);
+              dialog.open();
+            });
+          };
+        })(_buttons[i])
+      );
+    }
+  };
+
+  this.initDialogs = function() {
+    for (var i = 0; i < _markups.length; i++) {
+      var dialog = new Dialog(_markups[i].getAttribute('data-id'));
+      for (var j = 0; j < _triggers.length; j++) {
+        if (_triggers[j].canActivate(dialog)) {
+          (function(dialogInstance) {
+            _triggers[j].addListeners(dialogInstance);
+          })(dialog);
         }
-
-        var dialog = document.getElementById(triggerId);
-
-        if (!dialog) {
-          return;
-        }
-
-        closeAllDialogs(dialog);
-        openDialog(dialog);
-      });
-    });
-  }
-
-  return {
-    dialogs: _dialogs,
-    processDialogs: _processDialogs,
-    processButtons: _processButtons
+      }
+    }
   };
 }
 
 window.addEventListener('load', function() {
-  const dialogs = initDialogs();
-  dialogs.processDialogs();
-  dialogs.processButtons();
+  var dialogs = new Dialogs({
+    markups: 'apostrophe-dialog-box-markup',
+    buttons: 'apostrophe-dialog-box-trigger',
+    render: 'apostrophe-dialog-box-render-area',
+    active: 'apos-dialog-box-blackout--active',
+    overlay: 'apos-dialog-box-blackout'
+  });
+
+  dialogs.initButtons();
+
+  dialogs.initDialogs();
+
+  document.addEventListener('keyup', function(event) {
+    if (event.keyCode === 27) {
+      dialogs.close();
+    }
+  });
 });

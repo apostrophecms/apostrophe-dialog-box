@@ -1,9 +1,0 @@
-{% extends "outerLayoutBase.html" %}
-
-{% block dialogBoxes %}
-  {% set dialogs = apos.dialog.dialogs %}
-  {% for item in dialogs %}
-    {% set template = item.template or 'default' %}
-    {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
-  {% endfor %}
-{% endblock %}

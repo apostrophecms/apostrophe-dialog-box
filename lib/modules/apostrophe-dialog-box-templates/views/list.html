@@ -1,0 +1,15 @@
+<div class="apostrophe-dialog-box-apos-pages">
+  {% for item in data.dialogs %}
+    <div class="apostrophe-dialog-box-markup"
+      id="markup:{{item.dialogId}}"
+      data-id="{{item.dialogId}}" 
+      data-time="{{item.time}}" 
+      data-session-time="{{item.sessionTime}}" 
+      data-session="{{1 if item.session else 0}}"
+    >
+    </div>
+  {% endfor %}
+</div>
+<div id="apostrophe-dialog-box-render-area">
+
+</div>

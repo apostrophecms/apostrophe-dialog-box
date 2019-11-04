@@ -1,8 +1,6 @@
 <div
   class="apos-dialog-box-blackout {% block extraBlackoutClasses %}{% endblock %}"
-  id="{{item.slug}}" 
-  data-active="{{1 if data.page.dialogIds and data.page.dialogIds.includes(item._id) else 0}}"
-  data-time="{{item.time}}"
+  id="{{data.piece._id}}"
 >
   {% block main %}{% endblock %}
 </div>
