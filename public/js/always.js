@@ -130,12 +130,12 @@ function Dialogs(options) {
   var _triggers = [new TimeTrigger(_render, this)];
 
   this.close = function() {
-    var dialogs = document.getElementsByClassName('apos-dialog-box-blackout');
+    var dialogs = document.getElementsByClassName(options.overlay);
     for (var i = 0; i < dialogs.length; i++) {
       var element = dialogs[i];
 
       if (element) {
-        element.classList.remove('apos-dialog-box-blackout--active');
+        element.classList.remove(options.active);
       }
     }
   };
@@ -180,7 +180,9 @@ window.addEventListener('load', function() {
   var dialogs = new Dialogs({
     markups: 'apostrophe-dialog-box-markup',
     buttons: 'apostrophe-dialog-box-trigger',
-    render: 'apostrophe-dialog-box-render-area'
+    render: 'apostrophe-dialog-box-render-area',
+    active: 'apos-dialog-box-blackout--active',
+    overlay: 'apos-dialog-box-blackout'
   });
 
   dialogs.initButtons();
