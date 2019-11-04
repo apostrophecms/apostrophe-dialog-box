@@ -4,96 +4,6 @@
 
 //This is core logic for time triggers. It can be moved somewhere else in the future
 
-function initDialogs() {
-  var _dialogs = document.getElementsByClassName('apos-dialog-box-blackout');
-
-  var _buttons = document.getElementsByClassName(
-    'apostrophe-dialog-box-trigger'
-  );
-
-  function closeDialog(dialog) {
-    dialog.classList.remove('apos-dialog-box-blackout--active');
-  }
-
-  function closeAllDialogs(dialogs) {
-    Array.prototype.forEach.call(dialogs, closeDialog);
-  }
-
-  function openDialog(dialog) {
-    dialog.classList.add('apos-dialog-box-blackout--active');
-  }
-
-  function processDialog(dialog) {
-    var triggerTimeSec = dialog.getAttribute('data-time');
-    var isActive = dialog.getAttribute('data-active') === '1';
-
-    if (triggerTimeSec && isActive && !apos.user) {
-      var triggerTimeMil = triggerTimeSec * 1000;
-      var triggerTimeout = setTimeout(function() {
-        closeAllDialogs(_dialogs);
-        openDialog(dialog);
-        clearTimeout(triggerTimeout);
-      }, triggerTimeMil);
-    }
-
-    dialog.addEventListener('click', function(event) {
-      if (event.target.classList.contains('apos-dialog-box-blackout--active')) {
-        closeDialog(dialog);
-      }
-    });
-  }
-
-  function _processDialogs() {
-    if (_dialogs.length) {
-      Array.prototype.forEach.call(_dialogs, processDialog);
-      document.addEventListener('keyup', function(event) {
-        if (event.keyCode === 27) {
-          /* 
-            We take the first open dialog we have because there should
-            not be more than 1 active dialog at any given time.
-          */
-          var activeDialog = document.getElementsByClassName(
-            'apos-dialog-box-blackout--active'
-          )[0];
-
-          if (activeDialog) {
-            closeDialog(activeDialog);
-          }
-        }
-      });
-    }
-  }
-
-  function _processButtons() {
-    Array.prototype.forEach.call(_buttons, function(button) {
-      button.addEventListener('click', function() {
-        var triggerId = button.getAttribute('data-open');
-
-        if (!triggerId) {
-          return;
-        }
-
-        var dialog = document.getElementById(triggerId);
-
-        if (!dialog) {
-          return;
-        }
-
-        closeAllDialogs(dialog);
-        openDialog(dialog);
-      });
-    });
-  }
-
-  return {
-    dialogs: _dialogs,
-    processDialogs: _processDialogs,
-    processButtons: _processButtons
-  };
-}
-
-
-
 function extend(Child, Parent) {
   var Temp = function() {};
 
@@ -104,45 +14,22 @@ function extend(Child, Parent) {
   Child.prototype.constructor = Child;
 }
 
-function Trigger(dialog) {
-  this._type = '';
-
-  this.getType = function() {
-    return this._type;
-  };
-
-  this.canActivate = function() {
-    return false;
-  };
-
-  this.addListeners = function() {};
-}
-
-function TimeTrigger() {
-  this._type = '';
-
-  this.canActivate = function(dialog) {
-    return true;
-  };
-
-  this.addListeners = function(dialog) {};
-}
-
-extend(TimeTrigger, Trigger);
-
 function Dialog(id) {
-  
   var _element = null;
 
-  this._markup = document.getElementById(id);
+  this._markup = document.getElementById('markup:' + id);
 
-  this.time = parseInt(this._markup.getAttribute('data-time'));
+  this.time = this._markup
+    ? parseInt(this._markup.getAttribute('data-time'))
+    : null;
 
-  this.session = this._markup.getAttribute('data-session') === '1';
+  this.session = this._markup
+    ? this._markup.getAttribute('data-session') === '1'
+    : false;
 
   this.id = id;
 
-  this.element = function () {
+  this.element = function() {
     if (_element) {
       return _element;
     }
@@ -150,31 +37,37 @@ function Dialog(id) {
     _element = document.getElementById(id);
 
     return _element;
-  }
+  };
 
   this.open = function() {
+    if (!this.element()) {
+      return console.warn('Trying to trigger not rendered dialog!');
+    }
+
     return this.element().classList.add('apos-dialog-box-blackout--active');
   };
 
   this.close = function() {
+    if (!this.element()) {
+      return console.warn('Trying to trigger not rendered dialog!');
+    }
     return this.element().classList.remove('apos-dialog-box-blackout--active');
   };
 }
 
 function Renderer(id) {
-
   var _element = document.getElementById(id);
 
-  this.render = function(dialogId, cb) {
+  this.render = function(dialogId, callback) {
     var http = new XMLHttpRequest();
 
     http.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         _element.innerHTML = this.responseText;
-        
-        var dialog = new Dialog(document.getElementById(dialogId));
-        
-        dialog.open();
+
+        if (callback) {
+          callback();
+        }
       }
     };
 
@@ -184,59 +77,116 @@ function Renderer(id) {
   };
 }
 
+function Trigger(render, dialogs) {
+  this._type = '';
+
+  this.getType = function() {
+    return this._type;
+  };
+
+  this.canActivate = function(dialog) {
+    return false;
+  };
+
+  this.addListeners = function(dialog) {};
+}
+
+function TimeTrigger(render, dialogs) {
+  this._type = 'time';
+
+  this.canActivate = function(dialog) {
+    return !!dialog.time;
+  };
+
+  this.addListeners = function(dialog) {
+    var triggerTime = dialog.time * 1000;
+    var triggerTimeout = setTimeout(function() {
+      dialogs.close();
+      render.render(dialog.id, function() {
+        dialog.open();
+        dialog.element().addEventListener('click', function(event) {
+          if (event.target.classList.contains('apos-dialog-box-blackout--active')) {
+            dialog.close();
+          }
+        });
+      });
+      clearTimeout(triggerTimeout);
+    }, triggerTime);
+  };
+}
+
+extend(TimeTrigger, Trigger);
 
 function Dialogs(options) {
   var _markups = document.getElementsByClassName(options.markups);
 
   var _buttons = document.getElementsByClassName(options.buttons);
 
-  var _render  = new Renderer(options.render);
-  
-  var _dialogs = [];
+  var _render = new Renderer(options.render);
 
-  this.dialogs = function () {
-    return _dialogs;
-  }
+  var _triggers = [new TimeTrigger(_render, this)];
+
+  this.close = function() {
+    var dialogs = document.getElementsByClassName('apos-dialog-box-blackout');
+    for (var i = 0; i < dialogs.length; i++) {
+      var element = dialogs[i];
+      if (element) {
+        element.classList.remove('apos-dialog-box-blackout--active');
+      }
+    }
+  };
 
   this.initButtons = function() {
+    for (var i = 0; i < _buttons.length; i++) {
+      _buttons[i].addEventListener(
+        'click',
+        (function(button) {
+          return function() {
+            var dialogId = button.getAttribute('data-open');
 
-  }
+            if (!dialogId) {
+              return;
+            }
 
-  this.initDialogs = function () {
+            _render.render(dialogId, function() {
+              var dialog = new Dialog(dialogId);
+              dialog.open();
+            });
+          };
+        })(_buttons[i])
+      );
+    }
+  };
 
-  }
-
+  this.initDialogs = function() {
+    for (var i = 0; i < _markups.length; i++) {
+      var dialog = new Dialog(_markups[i].getAttribute('data-id'));
+      for (var j = 0; j < _triggers.length; j++) {
+        if (_triggers[j].canActivate(dialog)) {
+         (function (dialogInstance){
+          _triggers[j].addListeners(dialogInstance);
+         })(dialog);
+        }
+      }
+    }
+  };
 }
 
 
 window.addEventListener('load', function() {
+  var dialogs = new Dialogs({
+    markups: 'apostrophe-dialog-box-markup',
+    buttons: 'apostrophe-dialog-box-trigger',
+    render: 'apostrophe-dialog-box-render-area'
+  });
 
-  var _render = new Renderer(
-    document.getElementById('apostrophe-dialog-box-render-area')
-  );
+  dialogs.initButtons();
 
-  var _dialogsMarkup = document.getElementsByClassName(
-    'apostrophe-dialog-box-markup'
-  );
+  dialogs.initDialogs();
 
-  var _buttons = document.getElementsByClassName(
-    'apostrophe-dialog-box-trigger'
-  );
-
-  for (var i = 0; i < _buttons.length; i++) {
-    _buttons[i].addEventListener(
-      'click',
-      (function(button) {
-        return function() {
-          var dialogId = button.getAttribute('data-open');
-
-          if (!dialogId) {
-            return;
-          }
-
-          _render.render(dialogId, function(dialog) {});
-        };
-      })(_buttons[i])
-    );
-  }
+  document.addEventListener('keyup', function(event) {
+    if (event.keyCode === 27) {
+      dialogs.close();
+    }
+  });
 });
