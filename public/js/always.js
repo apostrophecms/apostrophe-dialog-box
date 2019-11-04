@@ -51,6 +51,7 @@ function Dialog(id) {
     if (!this.element()) {
       return console.warn('Trying to trigger not rendered dialog!');
     }
+
     return this.element().classList.remove('apos-dialog-box-blackout--active');
   };
 }
@@ -105,7 +106,9 @@ function TimeTrigger(render, dialogs) {
       render.render(dialog.id, function() {
         dialog.open();
         dialog.element().addEventListener('click', function(event) {
-          if (event.target.classList.contains('apos-dialog-box-blackout--active')) {
+          if (
+            event.target.classList.contains('apos-dialog-box-blackout--active')
+          ) {
             dialog.close();
           }
         });
@@ -130,6 +133,7 @@ function Dialogs(options) {
     var dialogs = document.getElementsByClassName('apos-dialog-box-blackout');
     for (var i = 0; i < dialogs.length; i++) {
       var element = dialogs[i];
+
       if (element) {
         element.classList.remove('apos-dialog-box-blackout--active');
       }
@@ -163,15 +167,14 @@ function Dialogs(options) {
       var dialog = new Dialog(_markups[i].getAttribute('data-id'));
       for (var j = 0; j < _triggers.length; j++) {
         if (_triggers[j].canActivate(dialog)) {
-         (function (dialogInstance){
-          _triggers[j].addListeners(dialogInstance);
-         })(dialog);
+          (function(dialogInstance) {
+            _triggers[j].addListeners(dialogInstance);
+          })(dialog);
         }
       }
     }
   };
 }
-
 
 window.addEventListener('load', function() {
   var dialogs = new Dialogs({
