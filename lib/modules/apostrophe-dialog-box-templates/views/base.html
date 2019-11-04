@@ -1,6 +1,7 @@
+{% set piece = data.piece %}
 <div
   class="apos-dialog-box-blackout {% block extraBlackoutClasses %}{% endblock %}"
-  id="{{data.piece._id}}"
+  id="{{piece._id}}"
 >
   {% block main %}{% endblock %}
 </div>
