@@ -152,7 +152,14 @@ function Dialogs(options) {
               return;
             }
 
-            _render.render(dialogId, function() {
+            var exists = document.getElementById(dialogId);
+
+            // If dialog exists then we don't need to render
+            if (exists) {
+              return (new Dialog(dialogId)).open();
+            }
+
+            return _render.render(dialogId, function() {
               var dialog = new Dialog(dialogId);
               dialog.open();
             });

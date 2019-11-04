@@ -56,9 +56,22 @@ module.exports = {
 
     self.apos.templates.prepend('body', (req) => {
       const page = req.data.page;
-      
+
       if (!page) {
         return;
+      }
+
+      // This is temporary will be moved to template
+      if (page.type === 'apostrophe-dialog-box-page' && req.data && req.data.pieces) {
+        let dialogs = '';
+        for(const box of req.data.pieces) {
+          dialogs += self.render(
+            req,
+            `apostrophe-dialog-box-templates:${box.template}.html`,
+            { piece: box }
+          );
+        }
+        return dialogs;
       }
 
       return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
