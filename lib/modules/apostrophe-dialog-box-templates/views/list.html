@@ -1,6 +1,7 @@
 <div class="apostrophe-dialog-box-apos-pages">
   {% for item in data.dialogs %}
-    <div class="apostrophe-dialog-box-markup" 
+    <div class="apostrophe-dialog-box-markup"
+      id="markup:{{item.dialogId}}"
       data-id="{{item.dialogId}}" 
       data-time="{{item.time}}" 
       data-session="{{1 if item.session else 0}}"

@@ -5,7 +5,7 @@
 {% block main %}
   <ul style="padding: 8rem;">
     {% for item in data.pieces %}
-      <li><a data-open="{{item.slug}}" href="javascript:void(0);" class="apostrophe-dialog-box-trigger">{{ item.title }}</a></li>
+      <li><a data-open="{{item._id}}" href="javascript:void(0);" class="apostrophe-dialog-box-trigger">{{ item.title }}</a></li>
     {% endfor %}
   </ul>
 {% endblock %}

@@ -1,7 +1,8 @@
 <div
   class="apos-dialog-box-blackout {% block extraBlackoutClasses %}{% endblock %}"
-  id="{{data.piece.slug}}" 
+  id="{{data.piece._id}}" 
   data-time="{{data.piece.time}}"
+  date-session="{{1 if data.piece.session else 0}}"
 >
   {% block main %}{% endblock %}
 </div>
