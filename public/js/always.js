@@ -155,7 +155,6 @@ function Renderer(element) {
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         element.innerHTML = this.responseText;
-        console.log(document.getElementById(dialogId));
         var dialog = new Dialog(document.getElementById(dialogId));
         dialog.open();
       }

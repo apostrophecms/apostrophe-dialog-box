@@ -56,6 +56,11 @@ module.exports = {
 
     self.apos.templates.prepend('body', (req) => {
       const page = req.data.page;
+      
+      if (!page) {
+        return;
+      }
+
       return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
         dialogs: page.dialogs ? page.dialogs : []
       });
