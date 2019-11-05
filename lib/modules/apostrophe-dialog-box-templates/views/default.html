@@ -1,7 +1,15 @@
-<h3>Default template</h3>
-{{ apos.area(data.piece, 'body', { 
-  widgets: {
-    'apostrophe-images': {},
-    'apostrophe-rich-text': {}
-  }
- }) }}
+{% extends "base.html" %}
+
+{% block main %}
+  <div class="apos-dialog-box">
+    <h3>{{piece.title}}</h3>
+    {{
+      apos.area(piece, 'body', {
+        widgets: {
+          'apostrophe-images': {},
+          'apostrophe-rich-text': {}
+        }
+      })
+    }}
+  </div>
+{% endblock %}
