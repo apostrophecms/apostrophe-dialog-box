@@ -70,13 +70,13 @@ module.exports = {
           req,
           'apostrophe-dialog-box-templates:list_all.html',
           {
-            pieces: req.data.pieces ? req.data.pieces : []
+            pieces: req.data.pieces || []
           }
         );
       }
 
       return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
-        dialogs: page.dialogs ? page.dialogs : []
+        dialogs: page.dialogs || []
       });
     });
   }
