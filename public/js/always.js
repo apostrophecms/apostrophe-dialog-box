@@ -9,13 +9,18 @@ var dialogClasses = {
   buttons: 'apostrophe-dialog-box-trigger',
   render: 'apostrophe-dialog-box-render-area',
   active: 'apos-dialog-box-blackout--active',
-  overlay: 'apos-dialog-box-blackout'
+  overlay: 'apos-dialog-box-blackout',
+  closeIcon: 'apos-dialog-box-close-icon'
 };
 
 var helpers = {
-  backdrop: function(event) {
+  closeDialog: function(event) {
     if (event.target.classList.contains(dialogClasses.active)) {
       event.target.classList.remove(dialogClasses.active);
+    }
+    
+    if (event.target.classList.contains(dialogClasses.closeIcon)) {
+      event.target.closest('.' + dialogClasses.active).classList.remove(dialogClasses.active);
     }
   }
 };
@@ -101,7 +106,7 @@ function Dialog(id) {
     _element = document.getElementById(id);
     
     if (_element) {
-      _element.addEventListener('click', helpers.backdrop);
+      _element.addEventListener('click', helpers.closeDialog);
     }
 
     return _element;
