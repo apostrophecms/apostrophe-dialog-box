@@ -9,13 +9,18 @@ var dialogClasses = {
   buttons: 'apostrophe-dialog-box-trigger',
   render: 'apostrophe-dialog-box-render-area',
   active: 'apos-dialog-box-blackout--active',
-  overlay: 'apos-dialog-box-blackout'
+  overlay: 'apos-dialog-box-blackout',
+  closeIcon: 'apos-dialog-box-close-icon'
 };
 
 var helpers = {
-  backdrop: function(event) {
+  closeDialog: function(event) {
     if (event.target.classList.contains(dialogClasses.active)) {
       event.target.classList.remove(dialogClasses.active);
+    }
+    
+    if (event.target.classList.contains(dialogClasses.closeIcon)) {
+      event.target.closest('.' + dialogClasses.active).classList.remove(dialogClasses.active);
     }
   }
 };
@@ -43,7 +48,55 @@ function Dialog(id) {
     ? this._markup.getAttribute('data-session') === '1'
     : false;
 
+  this.sessionTime = this._markup
+    ? this._markup.getAttribute('data-session-time')
+    : null;
+
   this.id = id;
+
+  this.getExpirationTime = function () {
+    var cookies = document.cookie.split(';');
+    var dialogCookie = cookies.find(function(cookie) {
+      return cookie.indexOf(id) !== -1
+    });
+
+    if (dialogCookie) {
+      return dialogCookie.split('=')[1];
+    }
+    
+    return null;
+  };
+
+  this.sessionExpired = function (time) {
+    var currentTime = new Date().getTime();
+
+    return currentTime > time;
+  };
+
+  this.checkSession = function () {
+    if (!this.session || !this.sessionTime) {
+      return true;
+    }
+
+    var expirationTime = this.getExpirationTime();
+
+    if (expirationTime) {
+      return this.sessionExpired(expirationTime)
+    }
+
+    this.setDialogSessionTime();
+
+    return true;
+  };
+
+  this.setDialogSessionTime = function () {
+    var currentTime = new Date();
+    var expirationTime = currentTime.setTime(
+      currentTime.getTime() + (this.sessionTime * 60 * 60 * 1000)
+    );
+
+    document.cookie = this.id + "=" + expirationTime;
+  }
 
   this.element = function() {
     if (_element) {
@@ -53,7 +106,7 @@ function Dialog(id) {
     _element = document.getElementById(id);
     
     if (_element) {
-      _element.addEventListener('click', helpers.backdrop);
+      _element.addEventListener('click', helpers.closeDialog);
     }
 
     return _element;
@@ -64,7 +117,11 @@ function Dialog(id) {
       return console.warn('Trying to trigger not rendered dialog!');
     }
 
-    return this.element().classList.add(dialogClasses.active);
+    if (this.checkSession()) {
+      return this.element().classList.add(dialogClasses.active);
+    }
+   
+    return false;
   };
 
   this.close = function() {

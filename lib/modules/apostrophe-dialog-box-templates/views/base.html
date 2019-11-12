@@ -3,5 +3,8 @@
   class="apos-dialog-box-blackout {% block extraBlackoutClasses %}{% endblock %}"
   id="{{piece._id}}"
 >
-  {% block main %}{% endblock %}
+  <div class="apos-dialog-box">
+    <i class="apos-dialog-box-close-icon"></i>
+    {% block main %}{% endblock %}
+  </div>
 </div>
