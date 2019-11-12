@@ -52,6 +52,7 @@ module.exports = {
   afterConstruct: async function(self) {
     self.addRoutes();
     self.pushAsset('script', 'always', { when: 'lean' });
+    self.pushAsset('script', 'user', { when: 'user' });
     self.pushAsset('stylesheet', 'dialog');
 
     self.apos.templates.prepend('body', req => {
