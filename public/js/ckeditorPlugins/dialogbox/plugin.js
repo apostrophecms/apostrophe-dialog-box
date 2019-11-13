@@ -11,7 +11,7 @@ CKEDITOR.plugins.add('dialogbox', {
     );
 
     editor.ui.addButton('Dialogbox', {
-      label: 'Insert Dialog Box',
+      label: 'Dialog Box',
       command: 'insertDialogbox',
       toolbar: 'links'
     });

@@ -23,47 +23,55 @@ CKEDITOR.dialog.add('dialogboxDialog', function(editor) {
     }
   }
 
+  var elements = [
+    {
+      type: 'text',
+      id: 'text',
+      label: 'Text',
+      validate: CKEDITOR.dialog.validate.notEmpty('Text can not be empty.')
+    },
+    {
+      type: 'select',
+      id: 'dialog',
+      label: 'Dialog',
+      items: dialogs,
+      validate: CKEDITOR.dialog.validate.notEmpty(
+        'Please select dialog box to open!'
+      )
+    }
+  ];
+
   return {
-    title: 'Dialog box properties',
+    title: 'Dialog box',
     minWidth: 400,
     minHeight: 200,
     contents: [
       {
-        id: 'tab-basic',
-        label: 'Basic Settings',
-        elements: [
-          {
-            type: 'text',
-            id: 'title',
-            label: 'Title',
-            validate: CKEDITOR.dialog.validate.notEmpty(
-              'Abbreviation field cannot be empty.'
-            )
-          },
-          {
-            type: 'select',
-            id: 'dialog',
-            label: 'Dialog',
-            items: dialogs,
-            validate: CKEDITOR.dialog.validate.notEmpty(
-              'Explanation field cannot be empty.'
-            )
-          }
-        ]
+        id: 'tab-settings',
+        label: 'Settings',
+        elements: elements
       }
     ],
+    onLoad: function() {
+      this.getElement().addClass('dialogbox');
+    },
     onOk: function() {
       var item = {
-        _id: this.getValueOf('tab-basic', 'dialog'),
-        title: this.getValueOf('tab-basic', 'title')
+        _id: this.getValueOf('tab-settings', 'dialog'),
+        text: this.getValueOf('tab-settings', 'text')
       };
-      editor.insertHtml(
-        '<a data-open="' +
-          item._id +
-          '" href="javascript:void(0);" class="apostrophe-dialog-box-trigger">' +
-          item.title +
-          '</a>'
-      );
+
+      var element = document.createElement('a');
+
+      element.setAttribute('data-open', item._id);
+
+      element.setAttribute('class', 'apostrophe-dialog-box-trigger');
+
+      element.setAttribute('href', '#');
+
+      element.innerText = item.text;
+
+      editor.insertHtml(element.outerHTML);
     }
   };
 });
