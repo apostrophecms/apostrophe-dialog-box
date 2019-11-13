@@ -18,9 +18,11 @@ var helpers = {
     if (event.target.classList.contains(dialogClasses.active)) {
       event.target.classList.remove(dialogClasses.active);
     }
-    
+
     if (event.target.classList.contains(dialogClasses.closeIcon)) {
-      event.target.closest('.' + dialogClasses.active).classList.remove(dialogClasses.active);
+      event.target
+        .closest('.' + dialogClasses.active)
+        .classList.remove(dialogClasses.active);
     }
   }
 };
@@ -35,7 +37,11 @@ function extend(Child, Parent) {
   Child.prototype.constructor = Child;
 }
 
-function Dialog(id) {
+function Dialog(id, options) {
+  if (!options) {
+    options = {};
+  }
+
   var _element = null;
 
   this._markup = document.getElementById('markup:' + id);
@@ -54,34 +60,34 @@ function Dialog(id) {
 
   this.id = id;
 
-  this.getExpirationTime = function () {
+  this.getExpirationTime = function() {
     var cookies = document.cookie.split(';');
     var dialogCookie = cookies.find(function(cookie) {
-      return cookie.indexOf(id) !== -1
+      return cookie.indexOf(id) !== -1;
     });
 
     if (dialogCookie) {
       return dialogCookie.split('=')[1];
     }
-    
+
     return null;
   };
 
-  this.sessionExpired = function (time) {
+  this.sessionExpired = function(time) {
     var currentTime = new Date().getTime();
 
     return currentTime > time;
   };
 
-  this.checkSession = function () {
-    if (!this.session || !this.sessionTime) {
+  this.checkSession = function() {
+    if (!this.session || !this.sessionTime || options.disableSession) {
       return true;
     }
 
     var expirationTime = this.getExpirationTime();
 
     if (expirationTime) {
-      return this.sessionExpired(expirationTime)
+      return this.sessionExpired(expirationTime);
     }
 
     this.setDialogSessionTime();
@@ -89,14 +95,14 @@ function Dialog(id) {
     return true;
   };
 
-  this.setDialogSessionTime = function () {
+  this.setDialogSessionTime = function() {
     var currentTime = new Date();
     var expirationTime = currentTime.setTime(
-      currentTime.getTime() + (this.sessionTime * 60 * 60 * 1000)
+      currentTime.getTime() + this.sessionTime * 60 * 60 * 1000
     );
 
-    document.cookie = this.id + "=" + expirationTime;
-  }
+    document.cookie = this.id + '=' + expirationTime;
+  };
 
   this.element = function() {
     if (_element) {
@@ -104,7 +110,7 @@ function Dialog(id) {
     }
 
     _element = document.getElementById(id);
-    
+
     if (_element) {
       _element.addEventListener('click', helpers.closeDialog);
     }
@@ -120,7 +126,7 @@ function Dialog(id) {
     if (this.checkSession()) {
       return this.element().classList.add(dialogClasses.active);
     }
-   
+
     return false;
   };
 
@@ -226,11 +232,15 @@ function Dialogs() {
 
             // If dialog exists then we don't need to render
             if (exists) {
-              return new Dialog(dialogId).open();
+              return new Dialog(dialogId, {
+                disableSession: true
+              }).open();
             }
 
             return _render.render(dialogId, function() {
-              var dialog = new Dialog(dialogId);
+              var dialog = new Dialog(dialogId, {
+                disableSession: true
+              });
               dialog.open();
             });
           };
