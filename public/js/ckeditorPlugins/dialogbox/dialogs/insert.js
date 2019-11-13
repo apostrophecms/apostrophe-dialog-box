@@ -1,43 +1,79 @@
 CKEDITOR.dialog.add('dialogboxDialog', function(editor) {
-  var request = new XMLHttpRequest();
-
-  request.open('GET', '/modules/apostrophe-dialog-box/all', false);
-
-  request.send(null);
-
-  var dialogs = [];
-
-  if (request.status === 200) {
-    var data = [];
-
-    if (request.responseText) {
-      try {
-        data = JSON.parse(request.responseText);
-      } catch (e) {
-        data = [];
-      }
-    }
-
-    for (var i = 0; i < data.length; i++) {
-      dialogs.push([data[i].title, data[i]._id]);
-    }
-  }
-
   var elements = [
     {
       type: 'text',
       id: 'text',
       label: 'Text',
-      validate: CKEDITOR.dialog.validate.notEmpty('Text can not be empty.')
+      validate: CKEDITOR.dialog.validate.notEmpty('Text can not be empty.'),
     },
     {
       type: 'select',
       id: 'dialog',
       label: 'Dialog',
-      items: dialogs,
+      items: [],
       validate: CKEDITOR.dialog.validate.notEmpty(
         'Please select dialog box to open!'
-      )
+      ),
+      onShow: function() {
+        var wrapper = this.getElement().$;
+
+        if (!wrapper) {
+          return;
+        }
+
+        var select = wrapper.getElementsByTagName('select');
+
+        if (!select || !select.length) {
+          return;
+        }
+
+        select = select[0];
+
+        select.innerHTML = '';
+
+        select.setAttribute('disabled', 'disabled');
+
+        var loading = document.createElement('option');
+
+        loading.innerText = 'Loading the dialogs ...';
+
+        select.append(loading);
+
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            var data = [];
+
+            if (request.responseText) {
+              try {
+                data = JSON.parse(request.responseText);
+              } catch (e) {
+                data = [];
+              }
+            }
+
+            if (!data.length) {
+              return;
+            }
+
+            select.innerHTML = '';
+
+            for (var i = 0; i < data.length; i++) {
+              var option = document.createElement('option');
+              option.innerText = data[i].title;
+              option.setAttribute('value', data[i]._id);
+              select.append(option);
+            }
+
+            select.removeAttribute('disabled');
+          }
+        };
+
+        request.open('GET', '/modules/apostrophe-dialog-box/all');
+
+        request.send();
+      }
     }
   ];
 

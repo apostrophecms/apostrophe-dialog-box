@@ -3,9 +3,17 @@
 {% block title %}{{ super() }} - {{ data.page.title }}{% endblock %}
 
 {% block main %}
-  <ul style="padding: 8rem;">
+  <ul class="dialog-box-pages">
     {% for item in data.pieces %}
-      <li><a data-open="{{item._id}}" href="javascript:void(0);" class="apostrophe-dialog-box-trigger">{{ item.title }}</a></li>
+      <li>
+        <div>
+          <a data-open="{{item._id}}" href="javascript:void(0);" class="apostrophe-dialog-box-trigger">{{ item.title }}</a> 
+          <button class="dialog-box-code-snippet-trigger" data-open="{{item._id}}">snippet</button>
+        </div>
+        <div id="snippet:{{item._id}}" class="dialog-box-code-snippet">
+          <<span>a</span><span> href="#"</span><span> class="apostrophe-dialog-box-trigger"</span> <span> data-open="{{item._id}}" </span>>{{ item.title }}<<span>/a</span>>
+        </div>
+      </li>
     {% endfor %}
   </ul>
 {% endblock %}
