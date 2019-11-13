@@ -221,7 +221,9 @@ function Dialogs() {
       _buttons[i].addEventListener(
         'click',
         (function(button) {
-          return function() {
+          return function(event) {
+            event.preventDefault();
+
             var dialogId = button.getAttribute('data-open');
 
             if (!dialogId) {
