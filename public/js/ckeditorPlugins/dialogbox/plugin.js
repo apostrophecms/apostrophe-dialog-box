@@ -6,7 +6,7 @@ CKEDITOR.plugins.add('dialogbox', {
     editor.addCommand(
       'insertDialogbox',
       new CKEDITOR.dialogCommand(dialogId, {
-        allowedContent: 'a[href,class,data-*]'
+        allowedContent: 'a[href,data-*](*)'
       })
     );
 
