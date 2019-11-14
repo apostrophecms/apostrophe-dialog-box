@@ -82,6 +82,10 @@
   }
 }
 
+@keyframes fadein {
+  100% {opacity: 1;}
+}
+
 .dialog-box-pages {
   padding: 8rem; 
   > li {
@@ -95,15 +99,6 @@
 
 .dialog-box-code-snippet.active {
   display: block;
-}
-
-@keyframes fadein {
-  100% {opacity: 1;}
-}
-
-.cke_button__dialogbox::after {
-  content: "\f086";
-  font-family: 'Font Awesome';
 }
 
 .dialogbox .cke_dialog_ui_input_select {
