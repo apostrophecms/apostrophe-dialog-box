@@ -98,7 +98,7 @@ function Dialog(id, options) {
   this.setDialogSessionTime = function() {
     var currentTime = new Date();
     var expirationTime = currentTime.setTime(
-      currentTime.getTime() + this.sessionTime * 60 * 60 * 1000
+      currentTime.getTime() + (this.sessionTime * 60 * 60 * 1000)
     );
 
     document.cookie = this.id + '=' + expirationTime;
