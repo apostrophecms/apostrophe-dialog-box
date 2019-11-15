@@ -123,11 +123,7 @@ function Dialog(id, options) {
       return console.warn('Trying to trigger not rendered dialog!');
     }
 
-    if (this.checkSession()) {
-      return this.element().classList.add(dialogClasses.active);
-    }
-
-    return false;
+    return this.element().classList.add(dialogClasses.active);
   };
 
   this.close = function() {
@@ -179,7 +175,7 @@ function TimeTrigger(render, dialogs) {
   this._type = 'time';
 
   this.canActivate = function(dialog) {
-    return !!dialog.time;
+    return !!dialog.time && dialog.checkSession();
   };
 
   this.addListeners = function(dialog) {
