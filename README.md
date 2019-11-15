@@ -31,7 +31,7 @@ Improves `apostrophe-pages` and adds Dialog Box Index as a page type to its opti
 Improves all widget types unless they opt out and adds a join to the dialog piece. This will be useful when triggering dialogs if a certain widget enters the viewport.
 
 ### apostrophe-dialog-box-apos-rich-text-widgets
-Improves `apostrophe-rich-text-widgets` and adds Dialog Box button to the widget as CKEditor plugin. To see add dialog box icon in te= in the editor don't forget to add `Dialogbox` item to toolbar, look at this example:
+Improves `apostrophe-rich-text-widgets` and adds Dialog Box button to the widget as CKEditor plugin. To see "add dialog box" icon in the editor don't forget to add `Dialogbox` item to toolbar, look at this example:
 ```
 {{ 
     apos.area(data.page, 'body', { 
