@@ -87,7 +87,8 @@
 }
 
 .dialog-box-pages {
-  padding: 8rem; 
+  padding: 8rem;
+
   > li {
     padding-bottom: 0.5rem;
   }
@@ -95,22 +96,26 @@
 
 .dialog-box-code-snippet {
   display: none;
+  
+  &.active {
+    display: block;
+  }
 }
 
-.dialog-box-code-snippet.active {
-  display: block;
+.dialogbox {
+  .cke_dialog_ui_input_select {
+    width: 100%;
+    
+    select {
+      width: 100%;
+    }
+  }
 }
 
-.dialogbox .cke_dialog_ui_input_select {
-  width: 100%;
-}
-
-.dialogbox .cke_dialog_ui_input_select select {
-  width: 100%;
-}
-
-.cke_button_icon.cke_button__dialogbox_icon {
-  display: block !important;
-  background-image: url('/modules/apostrophe-dialog-box/js/ckeditorPlugins/dialogbox/icons/dialogbox.png?t=I63C') !important;
-  height: 20px;
+.cke_button_icon {
+  &.cke_button__dialogbox_icon {
+    display: block !important;
+    background-image: url('/modules/apostrophe-dialog-box/js/ckeditorPlugins/dialogbox/icons/dialogbox.png?t=I63C') !important;
+    height: 20px;
+  }
 }
