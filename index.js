@@ -62,11 +62,7 @@ module.exports = {
         return;
       }
 
-      if (
-        page.type === 'apostrophe-dialog-box-page' &&
-        req.data &&
-        req.data.pieces
-      ) {
+      if (page.type === 'apostrophe-dialog-box-page' && req.data) {
         return self.render(
           req,
           'apostrophe-dialog-box-templates:list_all.html',
@@ -76,8 +72,25 @@ module.exports = {
         );
       }
 
+      const dialogs = Object.assign([], page.dialogs || []);
+
+      const global =
+        req.data.global && req.data.global.dialogs
+          ? req.data.global.dialogs
+          : [];
+
+      for (const globalDialog of global) {
+        const inArray = !!dialogs.find(
+          dialog => dialog.dialogId === globalDialog.dialogId
+        );
+
+        if (!inArray) {
+          dialogs.push(globalDialog);
+        }
+      }
+
       return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
-        dialogs: page.dialogs || []
+        dialogs: dialogs
       });
     });
   }
