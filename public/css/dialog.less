@@ -1,38 +1,66 @@
+// stylelint-disable
+
+.apos-active-blackout {
+  .apos-dialog-box-blackout.apos-dialog-box-blackout--active {
+    z-index: 999;
+  }
+}
+.apos-dialog-box-snippet-code {
+  font-family: Menlo,Roboto Mono,Courier New,monospace;
+  font-size: 13px;
+  color: rgb(230, 236, 241);
+  padding: 1rem;
+  background-color: rgb(24, 48, 85);
+  direction: ltr;
+  text-align: left;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.7;
+  font-weight: 400;
+  margin: 1rem 0;
+  -moz-tab-size: 2;
+  -o-tab-size: 2;
+  tab-size: 2;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  border-radius: 4px;
+  -webkit-font-smoothing: antialiased;
+}
 .apos-dialog-box {
-  padding: 30px 70px 60px 70px;
-  font-size: 14px;
   position: relative;
   top: 100px;
   width: 70%;
+  margin: 0 auto;
+  padding: 30px 70px 60px;
+  background: #fff;
   max-width: 1024px;
   max-height: 1024px;
-  background: white;
-  margin: 0 auto;
-
+  font-size: 14px;
+  
   @media screen and (max-width: 1024px) {
-    padding: 20px;
     top: 0;
-    margin: 0;
-    width: 100%;
-    flex-direction: column;
     display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    flex-direction: column;
   }
 
   & h3 {
-    text-align: center;
-    text-align: center;
     padding-bottom: 10px;
     font-size: 20px;
+    text-align: center;
   }
 
   &-blackout {
-    display: none;
+    z-index: 200;
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 200;
+    display: none;
     overflow: auto;
     outline: 0;
     background: #3e71e2;
@@ -53,8 +81,8 @@
 
   &-close-icon {
     position: absolute;
-    right: 22px;
     top: 12px;
+    right: 22px;
     width: 22px;
     height: 32px;
     opacity: 0.3;
@@ -68,8 +96,8 @@
       position: absolute;
       left: 15px;
       content: ' ';
-      height: 22px;
       width: 2px;
+      height: 22px;
       background-color: #333;
     }
 
@@ -84,4 +112,30 @@
 
 @keyframes fadein {
   100% {opacity: 1;}
+}
+
+.apos-dialog-box-pages {
+  padding: 8rem;
+
+  > li {
+    padding-bottom: 0.5rem;
+  }
+}
+
+.dialogbox {
+  .cke_dialog_ui_input_select {
+    width: 100%;
+    
+    select {
+      width: 100%;
+    }
+  }
+}
+
+.cke_button_icon {
+  &.cke_button__dialogbox_icon {
+    display: block !important;
+    height: 20px;
+    background-image: url('/modules/apostrophe-dialog-box/js/ckeditorPlugins/dialogbox/icons/dialogbox.png?t=I63C') !important;
+  }
 }

@@ -2,12 +2,9 @@ module.exports = {
   moogBundle: {
     directory: 'lib/modules',
     modules: [
-      // dialog functionality
-      'apostrophe-dialog-box-pages',
-      'apostrophe-dialog-box-templates',
       // improvements
       'apostrophe-dialog-box-apos-pages',
-      'apostrophe-dialog-box-apos-widgets',
+      // 'apostrophe-dialog-box-apos-widgets',
       'apostrophe-dialog-box-apos-doc-type-manager',
 
       // modules that should opt-out
@@ -32,17 +29,18 @@ module.exports = {
       choices: [{ label: 'Default', value: 'default' }]
     }
   ],
+  removeFields: ['tags'],
   construct: function(self, options) {
     options.arrangeFields = options.arrangeFields.concat([
       {
         name: 'basics',
         label: 'Basics',
-        fields: ['title', 'slug', 'tags', 'published']
+        fields: ['title', 'template']
       },
       {
-        name: 'info',
-        label: 'Info',
-        fields: ['template']
+        name: 'admin',
+        label: 'Admin',
+        fields: ['published', 'slug']
       }
     ]);
 
@@ -52,6 +50,7 @@ module.exports = {
   afterConstruct: async function(self) {
     self.addRoutes();
     self.pushAsset('script', 'always', { when: 'lean' });
+    self.pushAsset('script', 'user', { when: 'user' });
     self.pushAsset('stylesheet', 'dialog');
 
     self.apos.templates.prepend('body', req => {
@@ -61,22 +60,35 @@ module.exports = {
         return;
       }
 
-      if (
-        page.type === 'apostrophe-dialog-box-page' &&
-        req.data &&
-        req.data.pieces
-      ) {
+      if (page.type === 'apostrophe-dialog-box-page' && req.data) {
         return self.render(
           req,
-          'apostrophe-dialog-box-templates:list_all.html',
+          'apostrophe-dialog-box:dialogs/list_all.html',
           {
             pieces: req.data.pieces || []
           }
         );
       }
 
-      return self.render(req, 'apostrophe-dialog-box-templates:list.html', {
-        dialogs: page.dialogs || []
+      const dialogs = Object.assign([], page.dialogs || []);
+
+      const global =
+        req.data.global && req.data.global.dialogs
+          ? req.data.global.dialogs
+          : [];
+
+      for (const globalDialog of global) {
+        const inArray = !!dialogs.find(
+          dialog => dialog.dialogId === globalDialog.dialogId
+        );
+
+        if (!inArray) {
+          dialogs.push(globalDialog);
+        }
+      }
+
+      return self.render(req, 'apostrophe-dialog-box:dialogs/list.html', {
+        dialogs: dialogs
       });
     });
   }

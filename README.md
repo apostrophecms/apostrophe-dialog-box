@@ -1,4 +1,38 @@
 # apostrophe-dialog-box
+`apostrophe-dialog-box` provides simple pop-up dialog boxes for your Apostrophe site. Manage them you would like any other piece type, edit their content in-context, provide your own templates, and have users trigger them with various configuration.
+
+## Installation
+
+`npm install apostrophe-dialog-box`
+
+## Basic configuration
+
+In `app.js`
+
+```js
+var apos = require('apostrophe')({
+  shortName: 'dialog-sandbox',
+  modules: {
+    // ... other modules
+    'apostrophe-dialog-box': {}
+  }
+});
+```
+
+This will give you a piece type called Dialog Boxes in the admin bar as well as several enhancements to existing Apostrophe modules.
+
+## Working with your first Dialog Box
+
+Create a new dialog box from the admin bar. Give it a title and leave the template as `Default`.
+
+You'll be brought back to the manager where your new Dialog Box will have a Launch link in it's table row. Click it!
+![Launch the dialog](/images/apos-dialog-launch.png);
+
+
+
+
+
+
 
 ## 🚨🚨 WIP, not at a working stage yet!
 
@@ -30,9 +64,23 @@ Improves `apostrophe-pages` and adds Dialog Box Index as a page type to its opti
 ### apostrophe-dialog-box-apos-widgets
 Improves all widget types unless they opt out and adds a join to the dialog piece. This will be useful when triggering dialogs if a certain widget enters the viewport.
 
+### apostrophe-dialog-box-apos-rich-text-widgets
+Improves `apostrophe-rich-text-widgets` and adds Dialog Box button to the widget as CKEditor plugin. To see "add dialog box" icon in the editor don't forget to add `Dialogbox` item to toolbar, look at this example:
+```
+{{ 
+    apos.area(data.page, 'body', { 
+        widgets: {
+            'apostrophe-rich-text': {
+                 toolbar: [ 'Bold', 'Italic', 'Link', 'Dialogbox' ]
+            },
+            'apostrophe-video': {}
+        }
+    }) 
+}}
+```
+
 ### apostrophe-dialog-box-apos-files
 ### apostrophe-dialog-box-apos-groups
 ### apostrophe-dialog-box-apos-images
-### apostrophe-dialog-box-apos-rich-text-widgets
 ### apostrophe-dialog-box-apos-users
 Improve modules that have their base module opt-out of this functionality.

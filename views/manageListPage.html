@@ -1,0 +1,28 @@
+{%- import "apostrophe-ui:components/fields.html" as fields -%}
+{% for piece in data.pieces %}
+  <tr data-piece="{{ piece._id }}">
+    <td>{{fields.checkbox(data.options.name + '-select')}}</td>
+    {% for column in data.columns %}
+      <td class="apos-manage-{{ data.options.name | css }}-{{ column.name | css }}">
+        {% set verb = 'rescue' if (piece.trash and not (data.canEditTrash)) else 'edit' %}
+        <span><a href="#" data-apos-{{ verb }}-{{ data.options.name | css }}="{{ piece._id }}">
+          {%- if column.partial -%}
+            {{ column.partial(piece[column.name], piece) }}
+          {%- else -%}
+            {{ piece[column.name] }}
+          {%- endif -%}
+        </a></span>
+      </td>
+    {% endfor %}
+    <td class="apos-manage-{{ data.options.name | css }}-launch">
+       <a href="#" data-apos-dialog-box-trigger="{{ piece._id }}" >Launch</a>
+    </td>
+    <td class="apos-manage-{{ data.options.name | css }}-launch">
+       <button data-apos-dialog-box-copy-to-clipboard="{{ piece._id }}" >Copy Code to Clipboard</button>
+    </td>
+  </tr>
+{% endfor %}
+
+<script>
+  window.APOS_DIALOGS.init();
+</script>

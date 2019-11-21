@@ -35,5 +35,10 @@
     "stylelint": "^9.10.1",
     "stylelint-config-punkave": "0.0.9",
     "stylelint-order": "^2.2.1"
+  },
+  "dependencies": {
+    "eslint-config-apostrophe": "^3.0.0",
+    "lodash": "^4.17.15",
+    "sanitize-html": "^1.20.1"
   }
 }
