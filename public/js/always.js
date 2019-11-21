@@ -1,16 +1,18 @@
-///
-/// This is where you could write logic for what triggers dialogs
-///
+// This is core logic for time triggers. It can be moved somewhere else in the future
 
-//This is core logic for time triggers. It can be moved somewhere else in the future
+window.APOS_DIALOGS = {};
 
 var dialogClasses = {
   markups: 'apostrophe-dialog-box-markup',
-  buttons: 'apostrophe-dialog-box-trigger',
   render: 'apostrophe-dialog-box-render-area',
   active: 'apos-dialog-box-blackout--active',
   overlay: 'apos-dialog-box-blackout',
   closeIcon: 'apos-dialog-box-close-icon'
+};
+
+var dialogAttrubutes = {
+  buttons: '[data-apos-dialog-box-trigger]',
+  clipboard: '[data-apos-dialog-box-copy-to-clipboard]'
 };
 
 var helpers = {
@@ -60,7 +62,7 @@ function Dialog(id, options) {
 
   this.id = id;
 
-  this.getExpirationTime = function() {
+  this.getExpirationTime = function () {
     var cookies = document.cookie.split(';');
     var dialogCookie = cookies.find(function(cookie) {
       return cookie.indexOf(id) !== -1;
@@ -73,13 +75,13 @@ function Dialog(id, options) {
     return null;
   };
 
-  this.sessionExpired = function(time) {
+  this.sessionExpired = function (time) {
     var currentTime = new Date().getTime();
 
     return currentTime > time;
   };
 
-  this.checkSession = function() {
+  this.checkSession = function () {
     if (!this.session || !this.sessionTime || options.disableSession) {
       return true;
     }
@@ -95,7 +97,7 @@ function Dialog(id, options) {
     return true;
   };
 
-  this.setDialogSessionTime = function() {
+  this.setDialogSessionTime = function () {
     var currentTime = new Date();
     var expirationTime = currentTime.setTime(
       currentTime.getTime() + (this.sessionTime * 60 * 60 * 1000)
@@ -104,7 +106,7 @@ function Dialog(id, options) {
     document.cookie = this.id + '=' + expirationTime;
   };
 
-  this.element = function() {
+  this.element = function () {
     if (_element) {
       return _element;
     }
@@ -118,19 +120,11 @@ function Dialog(id, options) {
     return _element;
   };
 
-  this.open = function() {
-    if (!this.element()) {
-      return console.warn('Trying to trigger not rendered dialog!');
-    }
-
+  this.open = function () {
     return this.element().classList.add(dialogClasses.active);
   };
 
   this.close = function() {
-    if (!this.element()) {
-      return console.warn('Trying to trigger not rendered dialog!');
-    }
-
     return this.element().classList.remove(dialogClasses.active);
   };
 }
@@ -139,10 +133,10 @@ function Renderer(id) {
   var _element = document.getElementById(id);
 
   this.render = function(dialogId, callback) {
-    var http = new XMLHttpRequest();
+    var http = new window.XMLHttpRequest();
 
     http.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         _element.innerHTML = this.responseText;
 
         if (callback) {
@@ -195,7 +189,10 @@ extend(TimeTrigger, Trigger);
 function Dialogs() {
   var _markups = document.getElementsByClassName(dialogClasses.markups);
 
-  var _buttons = document.getElementsByClassName(dialogClasses.buttons);
+  var _buttons = document.querySelectorAll(dialogAttrubutes.buttons);
+
+  var _clipboards = document.querySelectorAll(dialogAttrubutes.clipboard);
+  console.log(_clipboards);
 
   var _render = new Renderer(dialogClasses.render);
 
@@ -220,7 +217,7 @@ function Dialogs() {
           return function(event) {
             event.preventDefault();
 
-            var dialogId = button.getAttribute('data-open');
+            var dialogId = button.getAttribute('data-apos-dialog-box-trigger');
 
             if (!dialogId) {
               return;
@@ -259,18 +256,51 @@ function Dialogs() {
       }
     }
   };
+
+  this.initCopyToClipboards = function () {
+    for (var i = 0; i < _clipboards.length; i++) {
+      _clipboards[i].addEventListener(
+        'click',
+        (function(button) {
+          return function(event) {
+            event.preventDefault();
+            var el = document.createElement('textarea');
+            el.value = '<a href="#" data-apos-dialog-box-trigger="' + button.getAttribute('data-apos-dialog-box-copy-to-clipboard') + '">Launch Dialog</a>';
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            apos.notify('Copied snippet to clipboard', {type: 'success'});
+          };
+        })(_clipboards[i])
+      );
+    }
+  };
 }
 
-window.addEventListener('load', function() {
+window.APOS_DIALOGS.init = function () {
   var dialogs = new Dialogs();
 
   dialogs.initButtons();
 
   dialogs.initDialogs();
 
+  dialogs.initCopyToClipboards();
+
   document.addEventListener('keyup', function(event) {
     if (event.keyCode === 27) {
       dialogs.close();
     }
   });
+};
+
+window.APOS_DIALOGS.copyToClipboard = function (str) {
+
+};
+
+window.addEventListener('load', function() {
+  window.APOS_DIALOGS.init();
 });

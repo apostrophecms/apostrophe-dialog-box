@@ -1,4 +1,38 @@
 # apostrophe-dialog-box
+`apostrophe-dialog-box` provides simple pop-up dialog boxes for your Apostrophe site. Manage them you would like any other piece type, edit their content in-context, provide your own templates, and have users trigger them with various configuration.
+
+## Installation
+
+`npm install apostrophe-dialog-box`
+
+## Basic configuration
+
+In `app.js`
+
+```js
+var apos = require('apostrophe')({
+  shortName: 'dialog-sandbox',
+  modules: {
+    // ... other modules
+    'apostrophe-dialog-box': {}
+  }
+});
+```
+
+This will give you a piece type called Dialog Boxes in the admin bar as well as several enhancements to existing Apostrophe modules.
+
+## Working with your first Dialog Box
+
+Create a new dialog box from the admin bar. Give it a title and leave the template as `Default`.
+
+You'll be brought back to the manager where your new Dialog Box will have a Launch link in it's table row. Click it!
+![Launch the dialog](/images/apos-dialog-launch.png);
+
+
+
+
+
+
 
 ## 🚨🚨 WIP, not at a working stage yet!
 

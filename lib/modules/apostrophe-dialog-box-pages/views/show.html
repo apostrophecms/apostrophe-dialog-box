@@ -1,9 +1,0 @@
-{% extends 'apostrophe-templates:layout.html' %}
-
-{% block title %}{{ super() }} - {{ data.page.title }}{% endblock %}
-
-{% block main %}
-  {% set template = data.piece.template or 'default' %}
-  I am a dialog show page: {{ data.piece.title }}
-  {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
-{% endblock %}

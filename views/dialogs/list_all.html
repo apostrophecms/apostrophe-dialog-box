@@ -1,4 +1,4 @@
 {% for piece in data.pieces %}
   {% set template = piece.template or 'default' %}
-  {% include 'apostrophe-dialog-box-templates:' + template + '.html' %}
+  {% include 'dialogs/' + template + '.html' %}
 {% endfor %}

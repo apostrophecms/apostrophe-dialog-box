@@ -4,7 +4,7 @@ CKEDITOR.dialog.add('dialogboxDialog', function(editor) {
       type: 'text',
       id: 'text',
       label: 'Text',
-      validate: CKEDITOR.dialog.validate.notEmpty('Text can not be empty.'),
+      validate: CKEDITOR.dialog.validate.notEmpty('Text can not be empty.')
     },
     {
       type: 'select',
@@ -39,10 +39,10 @@ CKEDITOR.dialog.add('dialogboxDialog', function(editor) {
 
         select.append(loading);
 
-        var request = new XMLHttpRequest();
+        var request = new window.XMLHttpRequest();
 
         request.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
+          if (this.readyState === 4 && this.status === 200) {
             var data = [];
 
             if (request.responseText) {
@@ -99,9 +99,7 @@ CKEDITOR.dialog.add('dialogboxDialog', function(editor) {
 
       var element = document.createElement('a');
 
-      element.setAttribute('data-open', item._id);
-
-      element.setAttribute('class', 'apostrophe-dialog-box-trigger');
+      element.setAttribute('data-apos-dialog-box-trigger', item._id);
 
       element.setAttribute('href', '#');
 
