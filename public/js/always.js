@@ -192,7 +192,6 @@ function Dialogs() {
   var _buttons = document.querySelectorAll(dialogAttrubutes.buttons);
 
   var _clipboards = document.querySelectorAll(dialogAttrubutes.clipboard);
-  console.log(_clipboards);
 
   var _render = new Renderer(dialogClasses.render);
 
@@ -237,6 +236,12 @@ function Dialogs() {
                 disableSession: true
               });
               dialog.open();
+
+              // enhance the new areas
+              if (apos.emit) {
+                apos.emit('enhance', $('#apostrophe-dialog-box-render-area'));
+              }
+
             });
           };
         })(_buttons[i])
@@ -295,10 +300,6 @@ window.APOS_DIALOGS.init = function () {
       dialogs.close();
     }
   });
-};
-
-window.APOS_DIALOGS.copyToClipboard = function (str) {
-
 };
 
 window.addEventListener('load', function() {
