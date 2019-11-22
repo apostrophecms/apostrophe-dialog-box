@@ -14,8 +14,8 @@ var apos = require('apostrophe')({
   shortName: 'dialog-sandbox',
   modules: {
     // ... other modules
-    'apostrophe-dialog-box': {}
-    'apostrophe-dialog-box-modal': {},
+    'apostrophe-dialog-box': {},
+    'apostrophe-dialog-box-modal': {}
   }
 });
 ```
