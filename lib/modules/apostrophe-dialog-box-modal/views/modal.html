@@ -1,0 +1,20 @@
+{%- extends "apostrophe-modal:baseSlideable.html" -%}
+{%- import 'apostrophe-ui:components/buttons.html' as buttons -%}
+
+{%- block modalClass -%}
+  apos-widget-tree apos-ui-modal-no-sidebar apos-modal-slideable
+{%- endblock -%}
+
+{%- block controls -%}
+  {{ buttons.major('Done', { action: 'cancel' }, 'apos-button--major') }}
+{%- endblock -%}
+
+{%- block label -%}
+  {{ __('Edit Dialog Box') }}
+{%- endblock -%}
+
+{%- block body -%}
+  <div class="apos-dialog-box" data-apos-dialog-modal-container></div>
+{%- endblock -%}
+
+{%- block instructions -%}{%- endblock -%}

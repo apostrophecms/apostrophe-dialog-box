@@ -15,10 +15,10 @@
       </td>
     {% endfor %}
     <td class="apos-manage-{{ data.options.name | css }}-launch">
-       <a href="#" data-apos-dialog-box-trigger="{{ piece._id }}" >Launch</a>
+       <a href="#" data-apos-dialog-box-modal-trigger="{{ piece._id }}">Launch</a>
     </td>
     <td class="apos-manage-{{ data.options.name | css }}-launch">
-       <button data-apos-dialog-box-copy-to-clipboard="{{ piece._id }}" >Copy Code to Clipboard</button>
+       <button data-apos-dialog-box-copy-to-clipboard="{{ piece._id }}">Copy Code to Clipboard</button>
     </td>
   </tr>
 {% endfor %}

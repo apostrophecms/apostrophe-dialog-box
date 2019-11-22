@@ -2,6 +2,7 @@ module.exports = {
   moogBundle: {
     directory: 'lib/modules',
     modules: [
+      'apostrophe-dialog-box-modal',
       // improvements
       'apostrophe-dialog-box-apos-pages',
       // 'apostrophe-dialog-box-apos-widgets',
@@ -51,6 +52,7 @@ module.exports = {
     self.addRoutes();
     self.pushAsset('script', 'always', { when: 'lean' });
     self.pushAsset('script', 'user', { when: 'user' });
+    self.pushAsset('script', 'modal', { when: 'user' });
     self.pushAsset('stylesheet', 'dialog');
 
     self.apos.templates.prepend('body', req => {
