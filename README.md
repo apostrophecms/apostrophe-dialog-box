@@ -28,59 +28,51 @@ Create a new dialog box from the admin bar. Give it a title and leave the templa
 You'll be brought back to the manager where your new Dialog Box will have a Launch link in it's table row. Click it!
 ![Launch the dialog](/images/apos-dialog-launch.png);
 
+This will activate the basic dialog template. It comes stock with basic Apostrophe area. Make your edits and close the dialog naturally and your edits will stick.
 
+## Triggering dialog boxes
 
+Dialog boxes can be triggered by page load or by clicking on elments with the proper `data` attributes attached to them.
 
+### Options for triggering dialog boxes on page load
 
+Page load settings can contain
+- Delay (in seconds) for when the dialog box will appear after load
+- Ability to set an expiration cookie so that dialogs will only appear once during the expiration lifespan
 
+### Triggering a dialog box on all pages
 
-## 🚨🚨 WIP, not at a working stage yet!
+Go to the *Global* menu and find the Dialog Boxes tab. Join the dialog box you made previously
 
-## Purpose of starting point
-The hope for this boilerplate is to provide you with a framework for breaking up the module and also to pre-wire much of the non-typical meta Apostrophe programming so that you can focus on front-end implmenetation, triggering, etc.
+### Triggering a dialog box on one page
 
-All modules prefixed with `apostrophe-dialog-box-apos-` are `improve` modules, meaning they interact with existing core modules to add global enhancements. The non-apos prefixed modules are new modules that provide content models, views, and front-end assets.
+Go to the *Page Settings* of the page the page you want to activate a dialog on. In the Page Settings find the Dialog Boxes tab and configure your dialog
 
-### apostrophe-dialog-box
-The base piece type for managing dialogs. This is the top level module in this bundle. It will provide any configuration needed for dialogs themselves.
+### Triggering a dialog box via text link
 
-Also comes with an example route that returns a JSON array of all dialog box pieces.. this in itself could be useful but just also fleshes out more bits of Apostrophe you might want.
+You can optionally enable a Dialog Box plugin for your rich text editors by passing the proper options:
 
-- [More info on how Apostrophe implements Express routes here](https://docs.apostrophecms.org/apostrophe/technical-overviews/how-apostrophe-handles-requests#express-routes)
-- [More on fetching pieces from Apostrophe (docs use callback style but can use async/await, as illustrated in this repo)](https://docs.apostrophecms.org/apostrophe/tutorials/intermediate/model-layer#fetching-pieces-with-apostrophe)
-
-### apostrophe-dialog-box-pages
-Provides the show pages for dialogs for natural editing and composing. Also provides an index for admin viewing all dialogs (the path for editors to get to these dialog UIs might change and an index might not be the right choice).
-
-### apostrophe-dialog-box-templates
-Provides a central place for template views to be stored. Projects can provide their own templates at the root `/lib/modules/apostrophe-dialog-box-templates/views/MYVIEW.html`. When adding views be sure to append the choices to the dialog piece `templates` field.
-
-### apostrophe-dialog-box-apos-doc-type-manager
-Improves all apostrophe doc types (pages, pieces, piece-like things) unless they opt out and adds a join to the dialog box piece type. This is meant to let us trigger a dialog from a page or a piece page (show page).
-
-### apostrophe-dialog-box-apos-pages
-Improves `apostrophe-pages` and adds Dialog Box Index as a page type to its options. Dialogs will be composed and edited as if they were normal pages but only seen by admins.
-
-### apostrophe-dialog-box-apos-widgets
-Improves all widget types unless they opt out and adds a join to the dialog piece. This will be useful when triggering dialogs if a certain widget enters the viewport.
-
-### apostrophe-dialog-box-apos-rich-text-widgets
-Improves `apostrophe-rich-text-widgets` and adds Dialog Box button to the widget as CKEditor plugin. To see "add dialog box" icon in the editor don't forget to add `Dialogbox` item to toolbar, look at this example:
-```
+```nunjucks
 {{ 
-    apos.area(data.page, 'body', { 
-        widgets: {
-            'apostrophe-rich-text': {
-                 toolbar: [ 'Bold', 'Italic', 'Link', 'Dialogbox' ]
-            },
-            'apostrophe-video': {}
-        }
-    }) 
+  apos.area(data.page, 'body', { 
+    widgets: {
+      'apostrophe-rich-text': {
+        toolbar: [ 'Bold', 'Italic', 'Link', 'Dialogbox' ]
+      },
+      'apostrophe-video': {}
+    }
+  }) 
 }}
 ```
 
-### apostrophe-dialog-box-apos-files
-### apostrophe-dialog-box-apos-groups
-### apostrophe-dialog-box-apos-images
-### apostrophe-dialog-box-apos-users
-Improve modules that have their base module opt-out of this functionality.
+![Dialog box icon](/images/dialog-icon.png);
+
+Using it will present you with a text field you can enter as well a dropdown to select which dialog box you'd like to associate with thel ink.
+
+![Dialog box rich text editor](/images/editor.png);
+
+### Triggering a dialog box from other things
+
+All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click Copy code to Clipbord (you can attach the attribute to anything you want, not just a link).
+
+![Copy to clipboard](/images/clipboard.png);
