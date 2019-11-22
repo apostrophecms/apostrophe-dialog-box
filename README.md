@@ -15,6 +15,7 @@ var apos = require('apostrophe')({
   modules: {
     // ... other modules
     'apostrophe-dialog-box': {}
+    'apostrophe-dialog-box-modal': {},
   }
 });
 ```
@@ -109,6 +110,7 @@ in `app.js`
     }
   ]
 },
+'apostrophe-dialog-box-modal': {},
 ```
 
 Your template will now be available to editors. You can also change the template of existing dialogs by modifying them in the Dialog Box manager.
