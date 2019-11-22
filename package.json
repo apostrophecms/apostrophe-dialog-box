@@ -1,7 +1,7 @@
 {
   "name": "apostrophe-dialog-box",
   "version": "1.0.0",
-  "description": "",
+  "description": "`apostrophe-dialog-box` provides simple pop-up dialog boxes for your Apostrophe site. Manage them you would like any other piece type, edit their content in-context, provide your own templates, and have users trigger them with various configuration.",
   "main": "index.js",
   "directories": {
     "lib": "lib"
@@ -40,5 +40,9 @@
     "eslint-config-apostrophe": "^3.0.0",
     "lodash": "^4.17.15",
     "sanitize-html": "^1.20.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/apostrophecms/apostrophe-dialog-box/issues"
+  },
+  "homepage": "https://github.com/apostrophecms/apostrophe-dialog-box#readme"
 }

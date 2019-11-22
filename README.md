@@ -65,14 +65,50 @@ You can optionally enable a Dialog Box plugin for your rich text editors by pass
 }}
 ```
 
-![Dialog box icon](/images/dialog-icon.png);
+![Dialog box icon](/images/dialog-icon.png)
 
 Using it will present you with a text field you can enter as well a dropdown to select which dialog box you'd like to associate with thel ink.
 
-![Dialog box rich text editor](/images/editor.png);
+![Dialog box rich text editor](/images/editor.png)
 
 ### Triggering a dialog box from other things
 
-All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click Copy code to Clipbord (you can attach the attribute to anything you want, not just a link).
+All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. The attribute is formatted like `data-apos-dialog-box-trigger="APOS_PIECE_ID"` To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click Copy code to Clipbord (you can attach the attribute to anything you want, not just a link).
 
-![Copy to clipboard](/images/clipboard.png);
+![Copy to clipboard](/images/clipboard.png)
+
+## Extending and Customizing Dialog Boxes
+
+You'll probably want to customize and potentially have multiple Dialog Box templates to choose from. In these custom templates you can include projet-level widgets, markup, and CSS.
+
+### Adding a new template
+
+- Create a new template like `/lib/modules/apostrophe-dialog-box/views/dialogs/MY_COOL_DIALOG.html`
+- Populate the file with the boilerplate markup
+```
+{% extends "dialogs/base.html" %}
+
+{% block main %}
+  <!-- your areas here -->
+{% endblock %}
+```
+- Override the default template select with your project level choices
+in `app.js`
+
+```
+'apostrophe-dialog-bo x': {
+  addFields: [
+    {
+      name: 'template',
+      label: 'Template',
+      type: 'select',
+      choices: [
+        { label: 'Default', value: 'default' },
+        { label: 'My Cool Dialgoog', value: 'MY_COOL_DIALOG' }
+      ]
+    }
+  ]
+},
+```
+
+Your template will now be available to editors. You can also change the template of existing dialogs by modifying them in the Dialog Box manager.
