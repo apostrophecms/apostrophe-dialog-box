@@ -106,10 +106,5 @@
   }
 }
 
-.cke_button_icon {
-  &.cke_button__dialogbox_icon {
-    display: block !important;
-    height: 20px;
-    background-image: url('/modules/apostrophe-dialog-box/js/ckeditorPlugins/dialogbox/icons/dialogbox.png?t=I63C') !important;
-  }
-}
+.icon-dialogbox { &::before {content: "\f14c";} }
+.cke_button__dialogbox { .icon-dialogbox(); }
