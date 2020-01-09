@@ -3,6 +3,7 @@ module.exports = {
     directory: 'lib/modules',
     modules: [
       'apostrophe-dialog-box-modal',
+      'apostrophe-dialog-box-pages',
       // improvements
       'apostrophe-dialog-box-apos-pages',
       // 'apostrophe-dialog-box-apos-widgets',
