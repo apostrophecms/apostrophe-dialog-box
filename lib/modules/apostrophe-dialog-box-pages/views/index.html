@@ -1,0 +1,20 @@
+{% extends 'apostrophe-templates:layout.html' %}
+
+{% block title %}{{ super() }} - {{ data.page.title }}{% endblock %}
+
+{% block main %}
+  <ul class="apos-dialog-box-pages">
+    {% for item in data.pieces %}
+      <li>
+        <div>
+          <a data-open="{{ item._id }}" href="javascript:void(0);" data-apos-dialog-box-trigger="{{ item._id }}" >{{ item.title }}</a>
+        </div>
+        <div id="snippet:{{ item._id }}" class="dialog-box-code-snippet">
+          <<span>a</span><span> href="#"</span> <span> data-apos-dialog-box-trigger="{{ item._id }}" </span>>{{ item.title }}<<span>/a</span>>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+
+

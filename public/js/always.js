@@ -111,7 +111,11 @@ function Dialog(id, options) {
       return _element;
     }
 
-    _element = document.getElementById(dialogClasses.render).firstElementChild;
+    _element = document.getElementById(id);
+
+    if (!_element) {
+      _element = document.getElementById(dialogClasses.render).firstElementChild;
+    }
 
     if (_element) {
       _element.addEventListener('click', helpers.closeDialog);

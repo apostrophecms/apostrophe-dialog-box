@@ -15,7 +15,9 @@ var apos = require('apostrophe')({
   modules: {
     // ... other modules
     'apostrophe-dialog-box': {},
-    'apostrophe-dialog-box-modal': {}
+    'apostrophe-dialog-box-modal': {},
+    // optional index page for dialog boxes, useful if dialog styles conflict with apos modal styles
+    'apostrophe-dialog-box-pages': {} 
   }
 });
 ```
@@ -29,7 +31,12 @@ Create a new dialog box from the admin bar. Give it a title and leave the templa
 You'll be brought back to the manager where your new Dialog Box will have a Launch link in it's table row. Click it!
 ![Launch the dialog](/images/apos-dialog-launch.png);
 
-This will activate the basic dialog template. It comes stock with basic Apostrophe area. Make your edits and close the dialog naturally and your edits will stick.
+This will activate the basic dialog template. It comes stock with basic Apostrophe area. Make your edits and close the dialog naturally and your edits will save.
+
+### Dedicated Index Page of Dialogs
+If you've opted to install `apostrophe-dialog-box-pages` you can also create a new page and give it a type of Dialog Index. Placing it in your page tree will give you a dedicated space where you can trigger and edit dialog boxes outside the Apostrophe modal context. This is useful if your site's styles are being overridden by `apos-modal` styles and you want a more accurate representation of your modal.
+
+Note that logged-out users will be forwarded to the homepage if they try to visit this URL.
 
 ## Triggering dialog boxes
 
