@@ -111,7 +111,7 @@ function Dialog(id, options) {
       return _element;
     }
 
-    _element = document.getElementById(id);
+    _element = document.getElementById(dialogClasses.render).firstElementChild;
 
     if (_element) {
       _element.addEventListener('click', helpers.closeDialog);
@@ -138,7 +138,6 @@ function Renderer(id) {
     http.onreadystatechange = function() {
       if (this.readyState === 4 && this.status === 200) {
         _element.innerHTML = this.responseText;
-
         if (callback) {
           callback();
         }
