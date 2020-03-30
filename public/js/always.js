@@ -281,7 +281,7 @@ function Dialogs() {
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
-            apos.notify('Copied snippet to clipboard', {type: 'success'});
+            apos.notify('Copied snippet to clipboard', { type: 'success' });
           };
         })(_clipboards[i])
       );

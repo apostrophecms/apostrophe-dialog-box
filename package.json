@@ -1,13 +1,13 @@
 {
   "name": "apostrophe-dialog-box",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "`apostrophe-dialog-box` provides simple pop-up dialog boxes for your Apostrophe site. Manage them you would like any other piece type, edit their content in-context, provide your own templates, and have users trigger them with various configuration.",
   "main": "index.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx eslint ."
   },
   "keywords": [
     "apostrophecms",
@@ -24,21 +24,19 @@
   "author": "Apostrophe Technologies",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^4.2.0",
-    "eslint-config-punkave": "^1.0.8",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.1.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-standard": "^3.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-apostrophe": "^3.1.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "stylelint": "^9.10.1",
     "stylelint-config-punkave": "0.0.9",
     "stylelint-order": "^2.2.1"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
-    "eslint-config-apostrophe": "^3.0.0",
     "lodash": "^4.17.15",
     "sanitize-html": "^1.20.1"
   },
