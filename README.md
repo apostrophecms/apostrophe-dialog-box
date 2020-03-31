@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/apostrophecms/apostrophe-dialog-box/tree/master.svg?style=svg)](https://circleci.com/gh/apostrophecms/apostrophe-dialog-box/tree/master)
+
 # apostrophe-dialog-box
 `apostrophe-dialog-box` provides simple pop-up dialog boxes for your Apostrophe site. Manage them you would like any other piece type, edit their content in-context, provide your own templates, and have users trigger them with various configuration.
 
@@ -17,7 +19,7 @@ var apos = require('apostrophe')({
     'apostrophe-dialog-box': {},
     'apostrophe-dialog-box-modal': {},
     // optional index page for dialog boxes, useful if dialog styles conflict with apos modal styles
-    'apostrophe-dialog-box-pages': {} 
+    'apostrophe-dialog-box-pages': {}
   }
 });
 ```
@@ -61,15 +63,15 @@ Go to the *Page Settings* of the page the page you want to activate a dialog on.
 You can optionally enable a Dialog Box plugin for your rich text editors by passing the proper options:
 
 ```nunjucks
-{{ 
-  apos.area(data.page, 'body', { 
+{{
+  apos.area(data.page, 'body', {
     widgets: {
       'apostrophe-rich-text': {
         toolbar: [ 'Bold', 'Italic', 'Link', 'Dialogbox' ]
       },
       'apostrophe-video': {}
     }
-  }) 
+  })
 }}
 ```
 

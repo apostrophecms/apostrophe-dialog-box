@@ -28,7 +28,10 @@ module.exports = {
       name: 'template',
       label: 'Template',
       type: 'select',
-      choices: [{ label: 'Default', value: 'default' }]
+      choices: [{
+        label: 'Default',
+        value: 'default'
+      }]
     }
   ],
   removeFields: ['tags'],
