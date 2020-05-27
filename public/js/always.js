@@ -147,7 +147,7 @@
           if (apos.emit) {
             apos.emit('enhance', window.$(_element));
           } else {
-            apos.utils.runPlayers(_element);            
+            apos.utils.runPlayers(_element);
           }
           if (callback) {
             callback();
@@ -316,4 +316,3 @@
     window.APOS_DIALOGS.init();
   });
 })();
-
