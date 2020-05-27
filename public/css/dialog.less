@@ -28,7 +28,9 @@
   }
 
   &-blackout {
-    z-index: 500;
+    // One step below apostrophe dialogs, so that widgets
+    // in dialog box modals can be edited
+    z-index: @apos-z-index-6;
     position: fixed;
     top: 0;
     right: 0;
