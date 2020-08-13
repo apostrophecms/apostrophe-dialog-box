@@ -17,8 +17,6 @@
     clipboard: '[data-apos-dialog-box-copy-to-clipboard]'
   };
 
-  var body = document.querySelector('body');
-
   var helpers = {
     closeDialog: function(event) {
       if (event.target.classList.contains(dialogClasses.active)) {
@@ -129,9 +127,9 @@
     };
 
     this.open = function () {
-      var event = document.createEvent('Event');
-      event.initEvent('isOpened', true, true);
-      body.dispatchEvent(event);
+      apos.utils.emit(document.body, 'apostrophe-dialog-box:opened', {
+        dialogId: this.id
+      });
       return this.element().classList.add(dialogClasses.active);
     };
 
@@ -193,10 +191,9 @@
         dialogs.close();
         render.render(dialog.id, function() {
           dialog.open();
-
-          var event = document.createEvent('Event');
-          event.initEvent('isTimeTriggered', true, true);
-          body.dispatchEvent(event);
+          apos.utils.emit(document.body, 'apostrophe-dialog-box:time-triggered', {
+            dialogId: dialog.id
+          });
         });
         clearTimeout(triggerTimeout);
       }, triggerTime);

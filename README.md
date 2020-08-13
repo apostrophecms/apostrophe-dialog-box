@@ -90,8 +90,8 @@ All you need to do to trigger a dialog box from custom widgets or UI is add a da
 ### Listening to events for analytics
 
 2 events are triggered on dialog-box opening:
-- `isTimeTriggered` for automatically opened dialog box on page load
-- `isOpened` for every opened dialog box
+- `time-triggered` for automatically opened dialog box on page load
+- `opened` for every opened dialog box
 
 A dialog opening on page load will trigger the 2 events, and a manually clicked link opening a dialog box will trigger only the latter.
 
@@ -100,8 +100,10 @@ These events are dispatched on the page `body`. Therefore, event listeners can b
 Example of listener to add at project level:
 
 ```js
-var body = document.querySelector('body');
-body.addEventListener('isTimeTriggered', function (evt) {
+document.body.addEventListener('apostrophe-dialog-box:time-triggered', function (evt) {
+  // code for `evt` handling
+}, false);
+document.body.addEventListener('apostrophe-dialog-box:opened', function (evt) {
   // code for `evt` handling
 }, false);
 ```
