@@ -108,6 +108,7 @@ document.body.addEventListener('apostrophe-dialog-box:opened', function (evt) {
 }, false);
 ```
 
+The event emitted contains the dialog box id `dialogId` in order to distinguish between multiple dialog boxes on a page.
 
 ## Extending and Customizing Dialog Boxes
 
