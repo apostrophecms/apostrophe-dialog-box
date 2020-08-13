@@ -1,3 +1,7 @@
+### 1.1.0 2020-08-26
+
+- Dispatched events when dialog box is opened whether automatically or manually.
+
 ### 1.0.7 2020-08-12
 
 - Fixes an issue that prevented use of `beforeCkeditorInline` overrides at project level.

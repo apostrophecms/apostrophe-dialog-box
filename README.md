@@ -87,6 +87,26 @@ All you need to do to trigger a dialog box from custom widgets or UI is add a da
 
 ![Copy to clipboard](/images/clipboard.png)
 
+### Listening to events for analytics
+
+2 events are triggered on dialog-box opening:
+- `isTimeTriggered` for automatically opened dialog box on page load
+- `isOpened` for every opened dialog box
+
+A dialog opening on page load will trigger the 2 events, and a manually clicked link opening a dialog box will trigger only the latter.
+
+These events are dispatched on the page `body`. Therefore, event listeners can be added to be notified. It can be useful for analytics purposes.
+
+Example of listener to add at project level:
+
+```js
+var body = document.querySelector('body');
+body.addEventListener('isTimeTriggered', function (evt) {
+  // code for `evt` handling
+}, false);
+```
+
+
 ## Extending and Customizing Dialog Boxes
 
 You'll probably want to customize and potentially have multiple Dialog Box templates to choose from. In these custom templates you can include projet-level widgets, markup, and CSS.
