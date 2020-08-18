@@ -127,6 +127,9 @@
     };
 
     this.open = function () {
+      apos.utils.emit(document.body, 'apostrophe-dialog-box:opened', {
+        dialogId: this.id
+      });
       return this.element().classList.add(dialogClasses.active);
     };
 
@@ -188,6 +191,9 @@
         dialogs.close();
         render.render(dialog.id, function() {
           dialog.open();
+          apos.utils.emit(document.body, 'apostrophe-dialog-box:time-triggered', {
+            dialogId: dialog.id
+          });
         });
         clearTimeout(triggerTimeout);
       }, triggerTime);
