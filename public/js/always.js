@@ -139,25 +139,23 @@
     var _element = document.getElementById(id);
 
     this.render = function(dialogId, callback) {
-      var http = new window.XMLHttpRequest();
-
-      http.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-          _element.innerHTML = this.responseText;
-          if (apos.emit) {
-            apos.emit('enhance', window.$(_element));
-          } else {
-            apos.utils.runPlayers(_element);
-          }
-          if (callback) {
-            callback();
-          }
+      apos.utils.get('/modules/apostrophe-dialog-box/render/' + dialogId, {}, function (err, response) {
+        if (err) {
+          return;
         }
-      };
 
-      http.open('GET', '/modules/apostrophe-dialog-box/render/' + dialogId, true);
+        _element.innerHTML = response;
 
-      http.send();
+        if (apos.emit) {
+          apos.emit('enhance', window.$(_element));
+        } else {
+          apos.utils.runPlayers(_element);
+        }
+
+        if (callback) {
+          callback();
+        }
+      });
     };
   }
 

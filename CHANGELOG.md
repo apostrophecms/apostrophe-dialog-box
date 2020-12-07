@@ -1,3 +1,7 @@
+### 1.0.8 2020-12-09
+
+- Replaces XHR call by `apos.utils.get` to respect locale prefix when used with apostrophe-workflow.
+
 ### 1.0.7 2020-08-12
 
 - Fixes an issue that prevented use of `beforeCkeditorInline` overrides at project level.
