@@ -1,6 +1,10 @@
-### 1.0.8 2020-12-09
+### 1.1.1 2020-12-09
 
 - Replaces XHR call by `apos.utils.get` to respect locale prefix when used with apostrophe-workflow.
+
+### 1.1.0 2020-08-26
+
+- Dispatched events when dialog box is opened whether automatically or manually.
 
 ### 1.0.7 2020-08-12
 
