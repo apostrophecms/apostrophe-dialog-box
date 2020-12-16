@@ -1,4 +1,4 @@
-### 1.1.1 2020-12-09
+### 1.1.1 2020-12-16
 
 - Replaces XHR call by `apos.utils.get` to respect locale prefix when used with apostrophe-workflow.
 
