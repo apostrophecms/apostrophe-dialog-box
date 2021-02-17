@@ -26,6 +26,28 @@ var apos = require('apostrophe')({
 
 This will give you a piece type called Dialog Boxes in the admin bar as well as several enhancements to existing Apostrophe modules.
 
+By default, this module is enabled for every modules that extends `apostrophe-doc-type-manager`. You can disable it manually by passing to the concerned module `dialogBox: false`.
+If you want to disable this module be default, and to enable it only in modules that needs it, you can pass the flag `disabledByDefault: true`.
+
+```js
+  modules: {
+    // ... other modules
+    'apostrophe-dialog-box': {
+      disabledByDefault: true
+    },
+  }
+```
+
+and then in the module where you want dialog boxes.
+
+```js
+module.exports = {
+  extend: 'apostrophe-pieces',
+  name: 'my-module',
+  dialogBox: true,
+}
+```
+
 ## Working with your first Dialog Box
 
 Create a new dialog box from the admin bar. Give it a title and leave the template as `Default`.
