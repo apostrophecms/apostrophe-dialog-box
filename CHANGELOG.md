@@ -1,3 +1,7 @@
+### 1.2.0 2021-02-17
+
+- Adds a flag to disable the module by default.
+
 ### 1.1.1 2020-12-16
 
 - Replaces XHR call by `apos.utils.get` to respect locale prefix when used with apostrophe-workflow.
