@@ -2,7 +2,7 @@
 // It is inside a self-executing function to avoid leaks in the global namespace.
 
 (function() {
-  window.APOS_DIALOGS = {};
+  window.APOS_DIALOGS = { dialogs: {} };
 
   var dialogClasses = {
     markups: 'apostrophe-dialog-box-markup',
@@ -17,14 +17,22 @@
     clipboard: '[data-apos-dialog-box-copy-to-clipboard]'
   };
 
-  function extend(Child, Parent) {
-    var Temp = function() {};
+  function getDialog(id, options) {
+    var dialogs = window.APOS_DIALOGS.dialogs;
+    var dialog = dialogs[id];
 
-    Temp.prototype = Parent.prototype;
+    if (!dialog) {
+      dialog = new Dialog(id, options);
+      dialogs[id] = dialog;
+    }
 
-    Child.prototype = new Temp();
+    return dialog;
+  }
 
-    Child.prototype.constructor = Child;
+  function triggerEvent(name, id) {
+    apos.utils.emit(document.body, 'apostrophe-dialog-box:' + name, {
+      dialogId: id
+    });
   }
 
   function Dialog(id, options) {
@@ -125,19 +133,31 @@
     };
 
     this.open = function () {
-      apos.utils.emit(document.body, 'apostrophe-dialog-box:opened', {
-        dialogId: this.id
-      });
+      var elm = this.element();
+      if (!elm) {
+        return;
+      }
 
-      return this.element().classList.add(dialogClasses.active);
+      var activeCn = dialogClasses.active;
+
+      if (!elm.classList.contains(activeCn)) {
+        elm.classList.add(dialogClasses.active);
+        triggerEvent('opened', this.id);
+      }
     };
 
     this.close = function() {
-      apos.utils.emit(document.body, 'apostrophe-dialog-box:closed', {
-        dialogId: this.id
-      });
+      var elm = this.element();
+      if (!elm) {
+        return;
+      }
 
-      return this.element().classList.remove(dialogClasses.active);
+      var activeCn = dialogClasses.active;
+
+      if (elm.classList.contains(activeCn)) {
+        elm.classList.remove(activeCn);
+        triggerEvent('closed', this.id);
+      }
     };
   }
 
