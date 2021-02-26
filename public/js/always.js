@@ -185,22 +185,12 @@
     };
   }
 
-  function Trigger(render, dialogs) {
-    this._type = '';
+  function TimeTrigger(render, dialogs) {
+    this._type = 'time';
 
     this.getType = function() {
       return this._type;
     };
-
-    this.canActivate = function(dialog) {
-      return false;
-    };
-
-    this.addListeners = function(dialog) {};
-  }
-
-  function TimeTrigger(render, dialogs) {
-    this._type = 'time';
 
     this.canActivate = function(dialog) {
       return !!dialog.time && dialog.checkSession();
@@ -210,12 +200,12 @@
       var triggerTime = dialog.time * 1000;
       var triggerTimeout = setTimeout(function() {
         dialogs.close();
+
         render.render(dialog.id, function() {
           dialog.open();
-          apos.utils.emit(document.body, 'apostrophe-dialog-box:time-triggered', {
-            dialogId: dialog.id
+          triggerEvent('time-triggered', dialog.id);
           });
-        });
+
         clearTimeout(triggerTimeout);
       }, triggerTime);
     };
