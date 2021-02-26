@@ -17,20 +17,6 @@
     clipboard: '[data-apos-dialog-box-copy-to-clipboard]'
   };
 
-  var helpers = {
-    closeDialog: function(event) {
-      if (event.target.classList.contains(dialogClasses.active)) {
-        event.target.classList.remove(dialogClasses.active);
-      }
-
-      if (event.target.classList.contains(dialogClasses.closeIcon)) {
-        event.target
-          .closest('.' + dialogClasses.active)
-          .classList.remove(dialogClasses.active);
-      }
-    }
-  };
-
   function extend(Child, Parent) {
     var Temp = function() {};
 
@@ -120,7 +106,15 @@
       }
 
       if (_element) {
-        _element.addEventListener('click', helpers.closeDialog);
+        var self = this;
+
+        _element.addEventListener('click', function (event) {
+          var cns = event.target.classList;
+          var isActiveDialog = cns.contains(dialogClasses.active);
+          var isCloseButton = cns.contains(dialogClasses.closeIcon);
+
+          (isActiveDialog || isCloseButton) && self.close();
+        });
       }
 
       return _element;
@@ -130,10 +124,15 @@
       apos.utils.emit(document.body, 'apostrophe-dialog-box:opened', {
         dialogId: this.id
       });
+
       return this.element().classList.add(dialogClasses.active);
     };
 
     this.close = function() {
+      apos.utils.emit(document.body, 'apostrophe-dialog-box:closed', {
+        dialogId: this.id
+      });
+
       return this.element().classList.remove(dialogClasses.active);
     };
   }
