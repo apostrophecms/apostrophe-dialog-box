@@ -2,5 +2,8 @@
   "extends": "apostrophe",
   "ignorePatterns": [
     "public/js/ckeditorPlugins/"
-  ]
+  ],
+  "rules": {
+    "no-var": 0
+  }
 }
