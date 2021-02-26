@@ -102,7 +102,11 @@
       _element = document.getElementById(id);
 
       if (!_element) {
-        _element = document.getElementById(dialogClasses.render).firstElementChild;
+        var renderElm = document.getElementById(dialogClasses.render);
+
+        if (renderElm) {
+          _element = renderElm.firstElementChild;
+      }
       }
 
       if (_element) {
@@ -309,7 +313,8 @@
     dialogs.initCopyToClipboards();
 
     document.addEventListener('keyup', function(event) {
-      if (event.keyCode === 27) {
+      // NOTE: "keyCode" is deprecated but needed for old browsers
+      if (event.key === 'Escape' || event.keyCode === 27) {
         dialogs.close();
       }
     });
