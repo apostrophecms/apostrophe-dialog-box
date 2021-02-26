@@ -12,7 +12,7 @@
     closeIcon: 'apos-dialog-box-close-icon'
   };
 
-  var dialogAttrubutes = {
+  var dialogAttributes = {
     buttons: '[data-apos-dialog-box-trigger]',
     clipboard: '[data-apos-dialog-box-copy-to-clipboard]'
   };
@@ -221,27 +221,22 @@
     };
   }
 
-  extend(TimeTrigger, Trigger);
-
   function Dialogs() {
     var _markups = document.getElementsByClassName(dialogClasses.markups);
 
-    var _buttons = document.querySelectorAll(dialogAttrubutes.buttons);
+    var _buttons = document.querySelectorAll(dialogAttributes.buttons);
 
-    var _clipboards = document.querySelectorAll(dialogAttrubutes.clipboard);
+    var _clipboards = document.querySelectorAll(dialogAttributes.clipboard);
 
     var _render = new Renderer(dialogClasses.render);
 
-    var _triggers = [new TimeTrigger(_render, this)];
+    var _triggers = [ new TimeTrigger(_render, this) ];
 
     this.close = function() {
-      var dialogs = document.getElementsByClassName(dialogClasses.overlay);
-      for (var i = 0; i < dialogs.length; i++) {
-        var element = dialogs[i];
+      var dialogs = window.APOS_DIALOGS.dialogs;
 
-        if (element) {
-          element.classList.remove(dialogClasses.active);
-        }
+      for (var id in dialogs) {
+        dialogs[id].close();
       }
     };
 
@@ -253,32 +248,26 @@
             return function(event) {
               event.preventDefault();
 
-              var dialogId = button.getAttribute('data-apos-dialog-box-trigger');
+              var dialogId = button.dataset.aposDialogBoxTrigger;
 
               if (!dialogId) {
                 return;
               }
 
-              var exists = document.getElementById(dialogId);
+              var dialogElm = document.getElementById(dialogId);
 
               // If dialog exists then we don't need to render
-              if (exists) {
-                return new Dialog(dialogId, {
-                  disableSession: true
-                }).open();
+              if (dialogElm) {
+                return getDialog(dialogId, { disableSession: true }).open();
               }
 
               return _render.render(dialogId, function() {
-                var dialog = new Dialog(dialogId, {
-                  disableSession: true
-                });
-                dialog.open();
+                getDialog(dialogId, { disableSession: true }).open();
 
                 // enhance the new areas
                 if (apos.emit) {
                   apos.emit('enhance', $('#apostrophe-dialog-box-render-area'));
                 }
-
               });
             };
           })(_buttons[i])
@@ -288,7 +277,8 @@
 
     this.initDialogs = function() {
       for (var i = 0; i < _markups.length; i++) {
-        var dialog = new Dialog(_markups[i].getAttribute('data-id'));
+        var dialog = getDialog(_markups[i].dataset.id);
+
         for (var j = 0; j < _triggers.length; j++) {
           if (_triggers[j].canActivate(dialog)) {
             (function(dialogInstance) {
