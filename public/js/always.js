@@ -45,15 +45,15 @@
     this._markup = document.getElementById('markup:' + id);
 
     this.time = this._markup
-      ? parseInt(this._markup.getAttribute('data-time'))
+      ? parseInt(this._markup.dataset.time)
       : null;
 
     this.session = this._markup
-      ? this._markup.getAttribute('data-session') === '1'
+      ? this._markup.dataset.session === '1'
       : false;
 
     this.sessionTime = this._markup
-      ? this._markup.getAttribute('data-session-time')
+      ? this._markup.dataset.sessionTime
       : null;
 
     this.id = id;
@@ -114,7 +114,7 @@
 
         if (renderElm) {
           _element = renderElm.firstElementChild;
-      }
+        }
       }
 
       if (_element) {
@@ -204,7 +204,7 @@
         render.render(dialog.id, function() {
           dialog.open();
           triggerEvent('time-triggered', dialog.id);
-          });
+        });
 
         clearTimeout(triggerTimeout);
       }, triggerTime);
@@ -287,7 +287,7 @@
             return function(event) {
               event.preventDefault();
               var el = document.createElement('textarea');
-              el.value = '<a href="#" data-apos-dialog-box-trigger="' + button.getAttribute('data-apos-dialog-box-copy-to-clipboard') + '">Launch Dialog</a>';
+              el.value = '<a href="#" data-apos-dialog-box-trigger="' + button.dataset.aposDialogBoxCopyToClipboard + '">Launch Dialog</a>';
               el.setAttribute('readonly', '');
               el.style.position = 'absolute';
               el.style.left = '-9999px';
