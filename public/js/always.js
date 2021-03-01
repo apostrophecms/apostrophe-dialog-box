@@ -2,8 +2,6 @@
 // It is inside a self-executing function to avoid leaks in the global namespace.
 
 (function() {
-  window.APOS_DIALOGS = { dialogs: {} };
-
   var dialogClasses = {
     markups: 'apostrophe-dialog-box-markup',
     render: 'apostrophe-dialog-box-render-area',
@@ -15,6 +13,12 @@
   var dialogAttributes = {
     buttons: '[data-apos-dialog-box-trigger]',
     clipboard: '[data-apos-dialog-box-copy-to-clipboard]'
+  };
+
+  window.APOS_DIALOGS = {
+    dialogs: {},
+    dialogClasses: dialogClasses,
+    dialogAttributes: dialogAttributes
   };
 
   function getDialog(id, options) {
