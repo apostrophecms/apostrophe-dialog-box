@@ -42,7 +42,7 @@ Note that logged-out users will be forwarded to the homepage if they try to visi
 
 ## Triggering dialog boxes
 
-Dialog boxes can be triggered by page load or by clicking on elments with the proper `data` attributes attached to them.
+Dialog boxes can be triggered by page load or by clicking on elements with the proper `data` attributes attached to them.
 
 ### Options for triggering dialog boxes on page load
 
@@ -77,7 +77,7 @@ You can optionally enable a Dialog Box plugin for your rich text editors by pass
 
 ![Dialog box icon](/images/dialog-icon.png)
 
-Using it will present you with a text field you can enter as well a dropdown to select which dialog box you'd like to associate with thel ink.
+Using it will present you with a text field you can enter as well a dropdown to select which dialog box you'd like to associate with the ink.
 
 ![Dialog box rich text editor](/images/editor.png)
 
@@ -141,7 +141,7 @@ in `app.js`
       type: 'select',
       choices: [
         { label: 'Default', value: 'default' },
-        { label: 'My Cool Dialgoog', value: 'MY_COOL_DIALOG' }
+        { label: 'My Cool Dialog', value: 'MY_COOL_DIALOG' }
       ]
     }
   ]
