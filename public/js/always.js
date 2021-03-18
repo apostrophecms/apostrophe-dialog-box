@@ -2,8 +2,6 @@
 // It is inside a self-executing function to avoid leaks in the global namespace.
 
 (function() {
-  window.APOS_DIALOGS = {};
-
   var dialogClasses = {
     markups: 'apostrophe-dialog-box-markup',
     render: 'apostrophe-dialog-box-render-area',
@@ -12,33 +10,33 @@
     closeIcon: 'apos-dialog-box-close-icon'
   };
 
-  var dialogAttrubutes = {
+  var dialogAttributes = {
     buttons: '[data-apos-dialog-box-trigger]',
     clipboard: '[data-apos-dialog-box-copy-to-clipboard]'
   };
 
-  var helpers = {
-    closeDialog: function(event) {
-      if (event.target.classList.contains(dialogClasses.active)) {
-        event.target.classList.remove(dialogClasses.active);
-      }
-
-      if (event.target.classList.contains(dialogClasses.closeIcon)) {
-        event.target
-          .closest('.' + dialogClasses.active)
-          .classList.remove(dialogClasses.active);
-      }
-    }
+  window.APOS_DIALOGS = {
+    dialogs: {},
+    dialogClasses: dialogClasses,
+    dialogAttributes: dialogAttributes
   };
 
-  function extend(Child, Parent) {
-    var Temp = function() {};
+  function getDialog(id, options) {
+    var dialogs = window.APOS_DIALOGS.dialogs;
+    var dialog = dialogs[id];
 
-    Temp.prototype = Parent.prototype;
+    if (!dialog) {
+      dialog = new Dialog(id, options);
+      dialogs[id] = dialog;
+    }
 
-    Child.prototype = new Temp();
+    return dialog;
+  }
 
-    Child.prototype.constructor = Child;
+  function triggerEvent(name, id) {
+    apos.utils.emit(document.body, 'apostrophe-dialog-box:' + name, {
+      dialogId: id
+    });
   }
 
   function Dialog(id, options) {
@@ -51,15 +49,15 @@
     this._markup = document.getElementById('markup:' + id);
 
     this.time = this._markup
-      ? parseInt(this._markup.getAttribute('data-time'))
+      ? parseInt(this._markup.dataset.time)
       : null;
 
     this.session = this._markup
-      ? this._markup.getAttribute('data-session') === '1'
+      ? this._markup.dataset.session === '1'
       : false;
 
     this.sessionTime = this._markup
-      ? this._markup.getAttribute('data-session-time')
+      ? this._markup.dataset.sessionTime
       : null;
 
     this.id = id;
@@ -116,25 +114,54 @@
       _element = document.getElementById(id);
 
       if (!_element) {
-        _element = document.getElementById(dialogClasses.render).firstElementChild;
+        var renderElm = document.getElementById(dialogClasses.render);
+
+        if (renderElm) {
+          _element = renderElm.firstElementChild;
+        }
       }
 
       if (_element) {
-        _element.addEventListener('click', helpers.closeDialog);
+        var self = this;
+
+        _element.addEventListener('click', function (event) {
+          var cns = event.target.classList;
+          var isActiveDialog = cns.contains(dialogClasses.active);
+          var isCloseButton = cns.contains(dialogClasses.closeIcon);
+
+          (isActiveDialog || isCloseButton) && self.close();
+        });
       }
 
       return _element;
     };
 
     this.open = function () {
-      apos.utils.emit(document.body, 'apostrophe-dialog-box:opened', {
-        dialogId: this.id
-      });
-      return this.element().classList.add(dialogClasses.active);
+      var elm = this.element();
+      if (!elm) {
+        return;
+      }
+
+      var activeCn = dialogClasses.active;
+
+      if (!elm.classList.contains(activeCn)) {
+        elm.classList.add(dialogClasses.active);
+        triggerEvent('opened', this.id);
+      }
     };
 
     this.close = function() {
-      return this.element().classList.remove(dialogClasses.active);
+      var elm = this.element();
+      if (!elm) {
+        return;
+      }
+
+      var activeCn = dialogClasses.active;
+
+      if (elm.classList.contains(activeCn)) {
+        elm.classList.remove(activeCn);
+        triggerEvent('closed', this.id);
+      }
     };
   }
 
@@ -162,22 +189,12 @@
     };
   }
 
-  function Trigger(render, dialogs) {
-    this._type = '';
+  function TimeTrigger(render, dialogs) {
+    this._type = 'time';
 
     this.getType = function() {
       return this._type;
     };
-
-    this.canActivate = function(dialog) {
-      return false;
-    };
-
-    this.addListeners = function(dialog) {};
-  }
-
-  function TimeTrigger(render, dialogs) {
-    this._type = 'time';
 
     this.canActivate = function(dialog) {
       return !!dialog.time && dialog.checkSession();
@@ -187,38 +204,33 @@
       var triggerTime = dialog.time * 1000;
       var triggerTimeout = setTimeout(function() {
         dialogs.close();
+
         render.render(dialog.id, function() {
           dialog.open();
-          apos.utils.emit(document.body, 'apostrophe-dialog-box:time-triggered', {
-            dialogId: dialog.id
-          });
+          triggerEvent('time-triggered', dialog.id);
         });
+
         clearTimeout(triggerTimeout);
       }, triggerTime);
     };
   }
 
-  extend(TimeTrigger, Trigger);
-
   function Dialogs() {
     var _markups = document.getElementsByClassName(dialogClasses.markups);
 
-    var _buttons = document.querySelectorAll(dialogAttrubutes.buttons);
+    var _buttons = document.querySelectorAll(dialogAttributes.buttons);
 
-    var _clipboards = document.querySelectorAll(dialogAttrubutes.clipboard);
+    var _clipboards = document.querySelectorAll(dialogAttributes.clipboard);
 
     var _render = new Renderer(dialogClasses.render);
 
-    var _triggers = [new TimeTrigger(_render, this)];
+    var _triggers = [ new TimeTrigger(_render, this) ];
 
     this.close = function() {
-      var dialogs = document.getElementsByClassName(dialogClasses.overlay);
-      for (var i = 0; i < dialogs.length; i++) {
-        var element = dialogs[i];
+      var dialogs = window.APOS_DIALOGS.dialogs;
 
-        if (element) {
-          element.classList.remove(dialogClasses.active);
-        }
+      for (var id in dialogs) {
+        dialogs[id].close();
       }
     };
 
@@ -230,32 +242,26 @@
             return function(event) {
               event.preventDefault();
 
-              var dialogId = button.getAttribute('data-apos-dialog-box-trigger');
+              var dialogId = button.dataset.aposDialogBoxTrigger;
 
               if (!dialogId) {
                 return;
               }
 
-              var exists = document.getElementById(dialogId);
+              var dialogElm = document.getElementById(dialogId);
 
               // If dialog exists then we don't need to render
-              if (exists) {
-                return new Dialog(dialogId, {
-                  disableSession: true
-                }).open();
+              if (dialogElm) {
+                return getDialog(dialogId, { disableSession: true }).open();
               }
 
               return _render.render(dialogId, function() {
-                var dialog = new Dialog(dialogId, {
-                  disableSession: true
-                });
-                dialog.open();
+                getDialog(dialogId, { disableSession: true }).open();
 
                 // enhance the new areas
                 if (apos.emit) {
                   apos.emit('enhance', $('#apostrophe-dialog-box-render-area'));
                 }
-
               });
             };
           })(_buttons[i])
@@ -265,7 +271,8 @@
 
     this.initDialogs = function() {
       for (var i = 0; i < _markups.length; i++) {
-        var dialog = new Dialog(_markups[i].getAttribute('data-id'));
+        var dialog = getDialog(_markups[i].dataset.id);
+
         for (var j = 0; j < _triggers.length; j++) {
           if (_triggers[j].canActivate(dialog)) {
             (function(dialogInstance) {
@@ -284,7 +291,7 @@
             return function(event) {
               event.preventDefault();
               var el = document.createElement('textarea');
-              el.value = '<a href="#" data-apos-dialog-box-trigger="' + button.getAttribute('data-apos-dialog-box-copy-to-clipboard') + '">Launch Dialog</a>';
+              el.value = '<a href="#" data-apos-dialog-box-trigger="' + button.dataset.aposDialogBoxCopyToClipboard + '">Launch Dialog</a>';
               el.setAttribute('readonly', '');
               el.style.position = 'absolute';
               el.style.left = '-9999px';
@@ -310,7 +317,8 @@
     dialogs.initCopyToClipboards();
 
     document.addEventListener('keyup', function(event) {
-      if (event.keyCode === 27) {
+      // NOTE: "keyCode" is deprecated but needed for old browsers
+      if (event.key === 'Escape' || event.keyCode === 27) {
         dialogs.close();
       }
     });
