@@ -28,24 +28,24 @@ module.exports = {
       name: 'template',
       label: 'Template',
       type: 'select',
-      choices: [{
+      choices: [ {
         label: 'Default',
         value: 'default'
-      }]
+      } ]
     }
   ],
-  removeFields: ['tags'],
+  removeFields: [ 'tags' ],
   construct: function(self, options) {
     options.arrangeFields = options.arrangeFields.concat([
       {
         name: 'basics',
         label: 'Basics',
-        fields: ['title', 'template']
+        fields: [ 'title', 'template' ]
       },
       {
         name: 'admin',
         label: 'Admin',
-        fields: ['published', 'slug']
+        fields: [ 'published', 'slug' ]
       }
     ]);
 

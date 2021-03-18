@@ -42,7 +42,7 @@ Note that logged-out users will be forwarded to the homepage if they try to visi
 
 ## Triggering dialog boxes
 
-Dialog boxes can be triggered by page load or by clicking on elments with the proper `data` attributes attached to them.
+Dialog boxes can be triggered by page load or by clicking on elements with the proper `data` attributes attached to them.
 
 ### Options for triggering dialog boxes on page load
 
@@ -77,23 +77,24 @@ You can optionally enable a Dialog Box plugin for your rich text editors by pass
 
 ![Dialog box icon](/images/dialog-icon.png)
 
-Using it will present you with a text field you can enter as well a dropdown to select which dialog box you'd like to associate with thel ink.
+Using it will present you with a text field you can enter as well a dropdown to select which dialog box you'd like to associate with the ink.
 
 ![Dialog box rich text editor](/images/editor.png)
 
 ### Triggering a dialog box from other things
 
-All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. The attribute is formatted like `data-apos-dialog-box-trigger="APOS_PIECE_ID"` To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click Copy code to Clipbord (you can attach the attribute to anything you want, not just a link).
+All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. The attribute is formatted like `data-apos-dialog-box-trigger="APOS_PIECE_ID"` To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click "Copy Code to Clipboard" (you can attach the attribute to anything you want, not just a link).
 
 ![Copy to clipboard](/images/clipboard.png)
 
 ### Listening to events for analytics
 
-2 events are triggered on dialog-box opening:
-- `time-triggered` for automatically opened dialog box on page load
-- `opened` for every opened dialog box
+There are a few events are triggered for dialog boxes:
+- `time-triggered` when a dialog box is opened automatically on page load
+- `opened` whenever a dialog box is opened
+- `closed` whenever a dialog box is closed
 
-A dialog opening on page load will trigger the 2 events, and a manually clicked link opening a dialog box will trigger only the latter.
+A dialog opening on page load will trigger the two open events, and a manually clicked link opening a dialog box will trigger only the `opened` event.
 
 These events are dispatched on the page `body`. Therefore, event listeners can be added to be notified. It can be useful for analytics purposes.
 
@@ -104,6 +105,9 @@ document.body.addEventListener('apostrophe-dialog-box:time-triggered', function 
   // code for `evt` handling
 }, false);
 document.body.addEventListener('apostrophe-dialog-box:opened', function (evt) {
+  // code for `evt` handling
+}, false);
+document.body.addEventListener('apostrophe-dialog-box:closed', function (evt) {
   // code for `evt` handling
 }, false);
 ```
@@ -137,7 +141,7 @@ in `app.js`
       type: 'select',
       choices: [
         { label: 'Default', value: 'default' },
-        { label: 'My Cool Dialgoog', value: 'MY_COOL_DIALOG' }
+        { label: 'My Cool Dialog', value: 'MY_COOL_DIALOG' }
       ]
     }
   ]
