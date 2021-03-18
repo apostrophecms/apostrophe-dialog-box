@@ -83,17 +83,18 @@ Using it will present you with a text field you can enter as well a dropdown to 
 
 ### Triggering a dialog box from other things
 
-All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. The attribute is formatted like `data-apos-dialog-box-trigger="APOS_PIECE_ID"` To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click Copy code to Clipbord (you can attach the attribute to anything you want, not just a link).
+All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. The attribute is formatted like `data-apos-dialog-box-trigger="APOS_PIECE_ID"` To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click "Copy Code to Clipboard" (you can attach the attribute to anything you want, not just a link).
 
 ![Copy to clipboard](/images/clipboard.png)
 
 ### Listening to events for analytics
 
-2 events are triggered on dialog-box opening:
-- `time-triggered` for automatically opened dialog box on page load
-- `opened` for every opened dialog box
+There are a few events are triggered for dialog boxes:
+- `time-triggered` when a dialog box is opened automatically on page load
+- `opened` whenever a dialog box is opened
+- `closed` whenever a dialog box is closed
 
-A dialog opening on page load will trigger the 2 events, and a manually clicked link opening a dialog box will trigger only the latter.
+A dialog opening on page load will trigger the two open events, and a manually clicked link opening a dialog box will trigger only the `opened` event.
 
 These events are dispatched on the page `body`. Therefore, event listeners can be added to be notified. It can be useful for analytics purposes.
 
@@ -104,6 +105,9 @@ document.body.addEventListener('apostrophe-dialog-box:time-triggered', function 
   // code for `evt` handling
 }, false);
 document.body.addEventListener('apostrophe-dialog-box:opened', function (evt) {
+  // code for `evt` handling
+}, false);
+document.body.addEventListener('apostrophe-dialog-box:closed', function (evt) {
   // code for `evt` handling
 }, false);
 ```
