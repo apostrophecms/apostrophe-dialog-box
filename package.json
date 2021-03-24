@@ -1,6 +1,6 @@
 {
   "name": "apostrophe-dialog-box",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "`apostrophe-dialog-box` provides simple pop-up dialog boxes for your Apostrophe site. Manage them you would like any other piece type, edit their content in-context, provide your own templates, and have users trigger them with various configuration.",
   "main": "index.js",
   "directories": {
