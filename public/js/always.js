@@ -62,6 +62,8 @@
 
     this.id = id;
 
+    this.parameters = options.parameters || {};
+
     this.getExpirationTime = function () {
       var cookies = document.cookie.split(';');
       var dialogCookie = cookies.find(function(cookie) {
@@ -243,6 +245,7 @@
               event.preventDefault();
 
               var dialogId = button.dataset.aposDialogBoxTrigger;
+              var parameters = JSON.parse(button.dataset.aposDialogBoxParameters) || {};
 
               if (!dialogId) {
                 return;
@@ -252,11 +255,11 @@
 
               // If dialog exists then we don't need to render
               if (dialogElm) {
-                return getDialog(dialogId, { disableSession: true }).open();
+                return getDialog(dialogId, _.assign({ disableSession: true }, { parameters: parameters })).open();
               }
 
               return _render.render(dialogId, function() {
-                getDialog(dialogId, { disableSession: true }).open();
+                getDialog(dialogId, _.assign({ disableSession: true }, { parameters: parameters })).open();
 
                 // enhance the new areas
                 if (apos.emit) {
