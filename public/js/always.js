@@ -21,13 +21,24 @@
     dialogAttributes: dialogAttributes
   };
 
+  function hashCode(obj) {
+    return JSON.stringify(obj).split('').reduce(function (acc, cur) {
+      acc = ((acc << 5) - acc) + cur.charCodeAt(0);
+      return acc & acc;
+    }, 0) + 2147483647;
+  }
+
   function getDialog(id, options) {
+    var hash = hashCode({
+      id: id,
+      options: options
+    });
     var dialogs = window.APOS_DIALOGS.dialogs;
-    var dialog = dialogs[id];
+    var dialog = dialogs[hash];
 
     if (!dialog) {
       dialog = new Dialog(id, options);
-      dialogs[id] = dialog;
+      dialogs[hash] = dialog;
     }
 
     return dialog;
