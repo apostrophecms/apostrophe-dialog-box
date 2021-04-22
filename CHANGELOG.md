@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0 (2021-04-14)
+
+- Adds parameters to options, so they can be read inside the dialog box (in a widget for example)
+- Calculate a hash for caching
+
 ## 1.2.0 (2021-03-24)
 
 - Adds a client side event on closing dialog boxes. Thanks to [Toke Voltelen](https://github.com/Tokimon) for the contribution.

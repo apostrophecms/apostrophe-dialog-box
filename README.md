@@ -150,3 +150,30 @@ in `app.js`
 ```
 
 Your template will now be available to editors. You can also change the template of existing dialogs by modifying them in the Dialog Box manager.
+
+### Passing parameters to dialog box options
+
+To pass additional parameters into the dialog box, add `data-apos-dialog-box-parameters`.
+
+Example of an index.html template using the same dialog box for pieces, but with a different parameter:
+
+```html
+<div>
+  <h2>Articles</h2><br>
+
+  <div>
+  {% for piece in data.pieces %}
+    {% set parameters = { articleId: piece._id } %}
+    <a
+      href="#"
+      data-apos-dialog-box-trigger="DIALOG_BOX_ID"
+      data-apos-dialog-box-parameters="{{ parameters | dump }}"
+    >
+      Launch dialog box for {{ piece.title }}
+    </a>
+  {% endfor %}
+  </div>
+</div>
+```
+
+This way, a widget inside the dialog box can read the added parameters and use them.

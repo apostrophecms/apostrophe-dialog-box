@@ -21,13 +21,20 @@
     dialogAttributes: dialogAttributes
   };
 
-  function getDialog(id, options) {
+  function hashCode(obj) {
+    return JSON.stringify(obj).split('').reduce(function (acc, cur) {
+      acc = ((acc << 5) - acc) + cur.charCodeAt(0);
+      return acc & acc;
+    }, 0) + 2147483647;
+  }
+
+  function getDialog(id, options, hash) {
     var dialogs = window.APOS_DIALOGS.dialogs;
-    var dialog = dialogs[id];
+    var dialog = dialogs[hash];
 
     if (!dialog) {
       dialog = new Dialog(id, options);
-      dialogs[id] = dialog;
+      dialogs[hash] = dialog;
     }
 
     return dialog;
@@ -61,6 +68,8 @@
       : null;
 
     this.id = id;
+
+    this.parameters = options.parameters || {};
 
     this.getExpirationTime = function () {
       var cookies = document.cookie.split(';');
@@ -226,6 +235,8 @@
 
     var _triggers = [ new TimeTrigger(_render, this) ];
 
+    var _hashes = [];
+
     this.close = function() {
       var dialogs = window.APOS_DIALOGS.dialogs;
 
@@ -243,20 +254,29 @@
               event.preventDefault();
 
               var dialogId = button.dataset.aposDialogBoxTrigger;
+              var parameters = JSON.parse(button.dataset.aposDialogBoxParameters || null);
+              var options = _.assign({ disableSession: true }, { parameters: parameters });
 
               if (!dialogId) {
                 return;
               }
 
+              var hash = hashCode({
+                id: dialogId,
+                options: options
+              });
+
               var dialogElm = document.getElementById(dialogId);
 
               // If dialog exists then we don't need to render
-              if (dialogElm) {
-                return getDialog(dialogId, { disableSession: true }).open();
+              if (dialogElm && _hashes.includes(hash)) {
+                return getDialog(dialogId, options, hash).open();
               }
 
+              _hashes.push(hash);
+
               return _render.render(dialogId, function() {
-                getDialog(dialogId, { disableSession: true }).open();
+                getDialog(dialogId, options, hash).open();
 
                 // enhance the new areas
                 if (apos.emit) {
@@ -271,7 +291,11 @@
 
     this.initDialogs = function() {
       for (var i = 0; i < _markups.length; i++) {
-        var dialog = getDialog(_markups[i].dataset.id);
+        var hash = hashCode({
+          id: _markups[i].dataset.id,
+          options: {}
+        });
+        var dialog = getDialog(_markups[i].dataset.id, {}, hash);
 
         for (var j = 0; j < _triggers.length; j++) {
           if (_triggers[j].canActivate(dialog)) {
