@@ -28,11 +28,7 @@
     }, 0) + 2147483647;
   }
 
-  function getDialog(id, options) {
-    var hash = hashCode({
-      id: id,
-      options: options
-    });
+  function getDialog(id, options, hash) {
     var dialogs = window.APOS_DIALOGS.dialogs;
     var dialog = dialogs[hash];
 
@@ -239,6 +235,8 @@
 
     var _triggers = [ new TimeTrigger(_render, this) ];
 
+    var _hashes = [];
+
     this.close = function() {
       var dialogs = window.APOS_DIALOGS.dialogs;
 
@@ -256,21 +254,29 @@
               event.preventDefault();
 
               var dialogId = button.dataset.aposDialogBoxTrigger;
-              var parameters = JSON.parse(button.dataset.aposDialogBoxParameters) || {};
+              var parameters = JSON.parse(button.dataset.aposDialogBoxParameters || null);
+              var options = _.assign({ disableSession: true }, { parameters: parameters });
 
               if (!dialogId) {
                 return;
               }
 
+              var hash = hashCode({
+                id: dialogId,
+                options: options
+              });
+
               var dialogElm = document.getElementById(dialogId);
 
               // If dialog exists then we don't need to render
-              if (dialogElm) {
-                return getDialog(dialogId, _.assign({ disableSession: true }, { parameters: parameters })).open();
+              if (dialogElm && _hashes.includes(hash)) {
+                return getDialog(dialogId, options, hash).open();
               }
 
+              _hashes.push(hash);
+
               return _render.render(dialogId, function() {
-                getDialog(dialogId, _.assign({ disableSession: true }, { parameters: parameters })).open();
+                getDialog(dialogId, options, hash).open();
 
                 // enhance the new areas
                 if (apos.emit) {
@@ -285,7 +291,11 @@
 
     this.initDialogs = function() {
       for (var i = 0; i < _markups.length; i++) {
-        var dialog = getDialog(_markups[i].dataset.id);
+        var hash = hashCode({
+          id: _markups[i].dataset.id,
+          options: {}
+        });
+        var dialog = getDialog(_markups[i].dataset.id, {}, hash);
 
         for (var j = 0; j < _triggers.length; j++) {
           if (_triggers[j].canActivate(dialog)) {
