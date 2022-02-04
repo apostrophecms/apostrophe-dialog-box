@@ -1,5 +1,9 @@
 # Changelog
 
+## next
+
+- add `trash` to `arrangeFields` to prevent warning during startup
+
 ## 1.2.0 (2021-03-24)
 
 - Adds a client side event on closing dialog boxes. Thanks to [Toke Voltelen](https://github.com/Tokimon) for the contribution.

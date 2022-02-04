@@ -45,7 +45,7 @@ module.exports = {
       {
         name: 'admin',
         label: 'Admin',
-        fields: [ 'published', 'slug' ]
+        fields: [ 'published', 'slug', 'trash' ]
       }
     ]);
 
