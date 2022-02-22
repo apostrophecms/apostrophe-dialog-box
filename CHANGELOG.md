@@ -1,6 +1,6 @@
 # Changelog
 
-## next
+## 1.2.1 (2022-02-22)
 
 - add `trash` to `arrangeFields` to prevent warning during startup
 
