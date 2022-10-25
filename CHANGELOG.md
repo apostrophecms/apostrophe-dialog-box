@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2 (2022-10-25)
+
+- Packaging changes only. No code changes.
+
 ## 1.2.1 (2022-02-22)
 
 - add `trash` to `arrangeFields` to prevent warning during startup

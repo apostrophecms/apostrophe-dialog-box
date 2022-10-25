@@ -30,8 +30,8 @@ This will give you a piece type called Dialog Boxes in the admin bar as well as 
 
 Create a new dialog box from the admin bar. Give it a title and leave the template as `Default`.
 
-You'll be brought back to the manager where your new Dialog Box will have a Launch link in it's table row. Click it!
-![Launch the dialog](/images/apos-dialog-launch.png);
+You'll be brought back to the manager where your new Dialog Box will have a Launch link in its table row. Click it!
+![Launch the dialog](https://static.apostrophecms.com/apostrophecms/apostrophe-dialog-box/images/apos-dialog-launch.png)
 
 This will activate the basic dialog template. It comes stock with basic Apostrophe area. Make your edits and close the dialog naturally and your edits will save.
 
@@ -75,17 +75,17 @@ You can optionally enable a Dialog Box plugin for your rich text editors by pass
 }}
 ```
 
-![Dialog box icon](/images/dialog-icon.png)
+![Dialog box icon](https://static.apostrophecms.com/apostrophecms/apostrophe-dialog-box/images/dialog-icon.png)
 
 Using it will present you with a text field you can enter as well a dropdown to select which dialog box you'd like to associate with the ink.
 
-![Dialog box rich text editor](/images/editor.png)
+![Dialog box rich text editor](https://static.apostrophecms.com/apostrophecms/apostrophe-dialog-box/images/editor.png)
 
 ### Triggering a dialog box from other things
 
 All you need to do to trigger a dialog box from custom widgets or UI is add a data attribute to the element with the dialog boxes ID. The attribute is formatted like `data-apos-dialog-box-trigger="APOS_PIECE_ID"` To get the snippet open the Dialog Boxes admin menu, find the dialog box you want to trigger in the manager, and click "Copy Code to Clipboard" (you can attach the attribute to anything you want, not just a link).
 
-![Copy to clipboard](/images/clipboard.png)
+![Copy to clipboard](https://static.apostrophecms.com/apostrophecms/apostrophe-dialog-box/images/clipboard.png)
 
 ### Listening to events for analytics
 
